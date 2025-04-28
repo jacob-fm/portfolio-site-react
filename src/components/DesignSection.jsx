@@ -9,7 +9,7 @@ const DesignSection = () => {
 			</div>
 			<div class="gallery">
 				<DesignThumbnail
-					imageSrc="./src/media/avid/avid_thumbnail.jpg"
+					imageSrc="public/media/avid/avid_thumbnail.jpg"
 					imageAlt="AVID Fitness Logo"
 					onClick={() => window.showOverlay("avid-overlay")}
 				/>
@@ -34,7 +34,7 @@ const DesignSection = () => {
 					<div class="grid two-columns contain-img-height-180">
 						<figure>
 							<img
-								src="./src/media/avid/old_avid_logo.jpeg"
+								src="public/media/avid/old_avid_logo.jpeg"
 								alt="Old AVID Fitness logo"
 								loading="lazy"
 							/>
@@ -42,7 +42,7 @@ const DesignSection = () => {
 						</figure>
 						<figure>
 							<img
-								src="./src/media/avid/blue_on_white.jpg"
+								src="public/media/avid/blue_on_white.jpg"
 								alt="New AVID Fitness logo, white on blue background"
 								loading="lazy"
 							/>
@@ -51,12 +51,12 @@ const DesignSection = () => {
 					</div>
 					<figure>
 						<div class="grid funky-grid-1">
-							<img src="./src/media/avid/profile_pic_2.png" loading="lazy" />
-							<img src="./src/media/avid/post1.png" loading="lazy" />
-							<img src="./src/media/avid/story1.png" loading="lazy" />
-							<img src="./src/media/avid/post4.png" loading="lazy" />
-							<img src="./src/media/avid/multi-image.png" loading="lazy" />
-							<img src="./src/media/avid/post2.png" loading="lazy" />
+							<img src="public/media/avid/profile_pic_2.png" loading="lazy" />
+							<img src="public/media/avid/post1.png" loading="lazy" />
+							<img src="public/media/avid/story1.png" loading="lazy" />
+							<img src="public/media/avid/post4.png" loading="lazy" />
+							<img src="public/media/avid/multi-image.png" loading="lazy" />
+							<img src="public/media/avid/post2.png" loading="lazy" />
 						</div>
 						<figcaption class="mt">
 							Social media templates and brand assets
@@ -80,17 +80,17 @@ const DesignSection = () => {
 					</p>
 					<div class="centered-column">
 						<img
-							src="./src/media/avid/homepage_screenshot.jpg"
+							src="public/media/avid/homepage_screenshot.jpg"
 							alt="AVID Homepage"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/avid/contact_screenshot.jpg"
+							src="public/media/avid/contact_screenshot.jpg"
 							alt="AVID Contact Form"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/avid/classes_screenshot.jpg"
+							src="public/media/avid/classes_screenshot.jpg"
 							alt="AVID CLasses Widget using MindBody"
 							loading="lazy"
 						/>
@@ -98,7 +98,7 @@ const DesignSection = () => {
 				</ProjectOverlay>
 
 				<DesignThumbnail
-					imageSrc="./src/media/amoriem/amoriem_thumbnail.jpg"
+					imageSrc="public/media/amoriem/amoriem_thumbnail.jpg"
 					imageAlt="Amoriem Labs Logo"
 					onClick={() => window.showOverlay("amoriem-overlay")}
 				/>
@@ -129,12 +129,12 @@ const DesignSection = () => {
 					</p>
 					<div class="grid two-columns">
 						<img
-							src="./src/media/amoriem/logo_landscape_icon.png"
+							src="public/media/amoriem/logo_landscape_icon.png"
 							alt="Amoriem logo with icon in landscape orientation"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/amoriem/logo_portrait_icon.png"
+							src="public/media/amoriem/logo_portrait_icon.png"
 							alt="Amoriem logo with icon in portrait orientation"
 							loading="lazy"
 						/>
@@ -160,7 +160,7 @@ const DesignSection = () => {
 					<figure>
 						<img
 							class="img-height-180"
-							src="./src/media/amoriem/new_logo.png"
+							src="public/media/amoriem/new_logo.png"
 							alt="Amoriem Labs' new logo"
 							loading="lazy"
 						/>
@@ -169,7 +169,7 @@ const DesignSection = () => {
 				</ProjectOverlay>
 
 				<DesignThumbnail
-					imageSrc="./src/media/gaming_counters/gaming_counters_thumbnail.png"
+					imageSrc="public/media/gaming_counters/gaming_counters_thumbnail.png"
 					imageAlt="Gaming Counters Collection Postcard"
 					onClick={() => window.showOverlay("gaming-counters-overlay")}
 				/>
@@ -225,22 +225,22 @@ const DesignSection = () => {
 					<h3>Postcards</h3>
 					<div class="grid two-columns mb">
 						<img
-							src="./src/media/gaming_counters/postcard1.1.png"
+							src="public/media/gaming_counters/postcard1.1.png"
 							alt="First version of promotional postcard, 1/2"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/gaming_counters/postcard2.1.png"
+							src="public/media/gaming_counters/postcard2.1.png"
 							alt="First version of promotional postcard, 2/2"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/gaming_counters/postcard1.3.png"
+							src="public/media/gaming_counters/postcard1.3.png"
 							alt="Second version of promotional postcard, 1/2"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/gaming_counters/postcard2.3.png"
+							src="public/media/gaming_counters/postcard2.3.png"
 							alt="Second version of promotional postcard, 2/2"
 							loading="lazy"
 						/>
@@ -248,17 +248,17 @@ const DesignSection = () => {
 					<h3>Flyers</h3>
 					<div class="centered-row mb">
 						<img
-							src="./src/media/gaming_counters/flyer1.png"
+							src="public/media/gaming_counters/flyer1.png"
 							alt="Promotional flyer 1"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/gaming_counters/flyer2.png"
+							src="public/media/gaming_counters/flyer2.png"
 							alt="Promotional flyer 2"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/gaming_counters/flyer3.png"
+							src="public/media/gaming_counters/flyer3.png"
 							alt="Promotional flyer 3"
 							loading="lazy"
 						/>
@@ -273,7 +273,7 @@ const DesignSection = () => {
 					<div class="centered-row">
 						<video loop autoplay>
 							<source
-								src="./src/media/gaming_counters/beinecke_exhibition.mp4"
+								src="public/media/gaming_counters/beinecke_exhibition.mp4"
 								type="video/mp4"
 							/>
 							Your browser does not support the video tag.
@@ -282,7 +282,7 @@ const DesignSection = () => {
 				</ProjectOverlay>
 
 				<DesignThumbnail
-					imageSrc="./src/media/grit/grit_thumbnail.jpg"
+					imageSrc="public/media/grit/grit_thumbnail.jpg"
 					imageAlt="GRIT Logo"
 					onClick={() => window.showOverlay("grit-overlay")}
 				/>
@@ -304,7 +304,7 @@ const DesignSection = () => {
 					<figure>
 						<img
 							class="img-height-220"
-							src="./src/media/grit/grid_system.jpg"
+							src="public/media/grit/grid_system.jpg"
 							alt="Underlying grid structure of GRIT logo"
 							loading="lazy"
 						/>
@@ -317,7 +317,7 @@ const DesignSection = () => {
 					<div class="centered-row">
 						<figure>
 							<img
-								src="./src/media/grit/first_texture.jpg"
+								src="public/media/grit/first_texture.jpg"
 								alt="An early attempt at using texture for the GRIT logo"
 								loading="lazy"
 							/>
@@ -325,7 +325,7 @@ const DesignSection = () => {
 						</figure>
 						<figure>
 							<img
-								src="./src/media/grit/grit_thumbnail.jpg"
+								src="public/media/grit/grit_thumbnail.jpg"
 								alt="Final GRIT logo"
 								loading="lazy"
 							/>
@@ -335,7 +335,7 @@ const DesignSection = () => {
 				</ProjectOverlay>
 
 				<DesignThumbnail
-					imageSrc="./src/media/nmg/nmg_thumbnail.png"
+					imageSrc="public/media/nmg/nmg_thumbnail.png"
 					imageAlt="New Matrix Group Logo"
 					onClick={() => window.showOverlay("nmg-overlay")}
 				/>
@@ -357,12 +357,12 @@ const DesignSection = () => {
 					</p>
 					<div class="centered-column contain-img-height-180">
 						<img
-							src="./src/media/nmg/nmg_thumbnail.png"
+							src="public/media/nmg/nmg_thumbnail.png"
 							alt="New Matrix Group logo, condensed"
 							loading="lazy"
 						/>
 						<img
-							src="./src/media/nmg/nmg_large_with_bg.png"
+							src="public/media/nmg/nmg_large_with_bg.png"
 							alt="New Matrix Group logo, extended"
 							loading="lazy"
 						/>
@@ -370,7 +370,7 @@ const DesignSection = () => {
 				</ProjectOverlay>
 
 				<DesignThumbnail
-					imageSrc="./src/media/cupcakes_thumbnail.png"
+					imageSrc="public/media/cupcakes_thumbnail.png"
 					imageAlt="Afternoon Cupcakes Logo"
 					onClick={() => window.showOverlay("cupcakes-overlay")}
 				/>
@@ -387,7 +387,7 @@ const DesignSection = () => {
 					</p>
 					<div class="centered-column contain-img-height-440">
 						<img
-							src="./src/media/cupcakes_thumbnail.png"
+							src="public/media/cupcakes_thumbnail.png"
 							alt="Afternoon Cupcakes Logo"
 							loading="lazy"
 						/>

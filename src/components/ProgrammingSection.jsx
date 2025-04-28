@@ -11,7 +11,7 @@ const ProgrammingSection = () => {
 				onClick={() => window.showOverlay("midi-overlay")}
 				title="MIDI Signal Augmenter"
 				description="A program for turning single note presses into chords and arpeggios."
-				imgSrc="./src/media/midi_thumbnail.png"
+				imgSrc="public/media/midi_thumbnail.png"
 				imgAlt="MIDI notes visualized"
 			/>
 			<ProjectOverlay
@@ -87,7 +87,7 @@ const ProgrammingSection = () => {
 				onClick={() => window.showOverlay("alien-egg-overlay")}
 				title='"Alien Egg" Sculpture'
 				description="An interactive sculpture built with clay, ultrasonic sensors, and sleep deprivation."
-				imgSrc="./src/media/alien_egg/brain_rock_thumbnail.png"
+				imgSrc="public/media/alien_egg/brain_rock_thumbnail.png"
 				imgAlt="Alien Egg sculpture"
 			/>
 			<ProjectOverlay
@@ -129,7 +129,7 @@ const ProgrammingSection = () => {
 				<figure>
 					<img
 						class="img-height-420"
-						src="./src/media/alien_egg/wide_angle.jpg"
+						src="public/media/alien_egg/wide_angle.jpg"
 						alt="Wide angle shot of the Alien Egg sculpture in the gallery"
 					/>
 					<figcaption>The egg sitting in its enclave</figcaption>
@@ -144,12 +144,12 @@ const ProgrammingSection = () => {
 				</p>
 				<div class="centered-column contain-img-height-220">
 					<img
-						src="./src/media/alien_egg/close_up.jpg"
+						src="public/media/alien_egg/close_up.jpg"
 						alt="Close-up shot of Alien Egg sculpture"
 					/>
 					<video preload="none" width="640" height="360" controls loop muted>
 						<source
-							src="./src/media/alien_egg/demonstration.mp4"
+							src="public/media/alien_egg/demonstration.mp4"
 							type="video/mp4"
 						/>
 						Your browser does not support the video tag.
@@ -162,7 +162,7 @@ const ProgrammingSection = () => {
 				onClick={() => window.showOverlay("high-noon-overlay")}
 				title="High Noon"
 				description="A very simple 3D platformer I built as a way of teaching myself the Unity engine."
-				imgSrc="./src/media/high_noon/high_noon_thumbnail.png"
+				imgSrc="public/media/high_noon/high_noon_thumbnail.png"
 				imgAlt="Screenshot from High Noon game"
 			/>
 			<ProjectOverlay
@@ -189,17 +189,17 @@ const ProgrammingSection = () => {
 				<div class="centered-column mt">
 					<img
 						loading="lazy"
-						src="./src/media/high_noon/cowboy_1.jpg"
+						src="public/media/high_noon/cowboy_1.jpg"
 						alt="Screenshot from High Noon 1/3"
 					/>
 					<img
 						loading="lazy"
-						src="./src/media/high_noon/cowboy_2.jpg"
+						src="public/media/high_noon/cowboy_2.jpg"
 						alt="Screenshot from High Noon 2/3"
 					/>
 					<img
 						loading="lazy"
-						src="./src/media/high_noon/cowboy_3.jpg"
+						src="public/media/high_noon/cowboy_3.jpg"
 						alt="Screenshot from High Noon 3/3"
 					/>
 				</div>

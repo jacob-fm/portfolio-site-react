@@ -1,5 +1,3 @@
-import ProgrammingCard from "./components/ProgrammingCard";
-import ProjectOverlay from "./components/ProjectOverlay";
 import DesignSection from "./components/DesignSection";
 import ProgrammingSection from "./components/ProgrammingSection";
 import "./style.scss";
@@ -45,11 +43,11 @@ function App() {
 				<h2>Developer and Designer</h2>
 			</div>
 			<div class="centered-column" id="main-links">
-				<a href="#design-work-section">
-					<h2>– Design Work –</h2>
-				</a>
 				<a href="#programming-work-section">
 					<h2>– Programming Work –</h2>
+				</a>
+				<a href="#design-work-section">
+					<h2>– Design Work –</h2>
 				</a>
 			</div>
 			<div class="mt mb" id="contact-icons">
@@ -79,8 +77,8 @@ function App() {
 					</svg>
 				</a>
 			</div>
-      <DesignSection />
       <ProgrammingSection />
+      <DesignSection />
 			<div class="section-heading">
 				<h2>Contact</h2>
 			</div>

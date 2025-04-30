@@ -54,7 +54,7 @@ function App() {
 				<a href="https://www.instagram.com/i.love.kishka/" target="_blank">
 					<i class="fa-brands fa-instagram"></i>
 				</a>
-				<a href="https://github.com/material-kish" target="_blank">
+				<a href="https://github.com/jacob-fm" target="_blank">
 					<i class="fa-brands fa-github"></i>
 				</a>
 				<a href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com">
@@ -100,12 +100,12 @@ function App() {
 					<h3>@i.love.kishka</h3>
 				</a>
 				<a
-					href="https://github.com/material-kish"
+					href="https://github.com/jacob-fm"
 					target="_blank"
 					class="contact-detail"
 				>
 					<i class="fa-brands fa-github"></i>
-					<h3>github.com/material-kish</h3>
+					<h3>github.com/jacob-fm</h3>
 				</a>
 			</div>
 			<script type="module" src="/src/main.js"></script>

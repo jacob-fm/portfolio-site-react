@@ -42,7 +42,7 @@ function App() {
 				<h1>Jacob Feit Mann</h1>
 				<h2>Developer and Designer</h2>
 			</div>
-			<div class="centered-column" id="main-links">
+			<div className="centered-column" id="main-links">
 				<a href="#programming-work-section">
 					<h2>– Programming Work –</h2>
 				</a>
@@ -50,18 +50,18 @@ function App() {
 					<h2>– Design Work –</h2>
 				</a>
 			</div>
-			<div class="mt mb" id="contact-icons">
+			<div className="mt mb" id="contact-icons">
 				<a href="https://www.instagram.com/i.love.kishka/" target="_blank">
-					<i class="fa-brands fa-instagram"></i>
+					<i className="fa-brands fa-instagram"></i>
 				</a>
 				<a href="https://github.com/jacob-fm" target="_blank">
-					<i class="fa-brands fa-github"></i>
+					<i className="fa-brands fa-github"></i>
 				</a>
 				<a href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com">
-					<i class="fa-regular fa-envelope"></i>
+					<i className="fa-regular fa-envelope"></i>
 				</a>
 			</div>
-			<div class="centered-row mt mb-4">
+			<div className="centered-row mt mb-4">
 				<a href="#design-work-section">
 					<svg
 						width="93"
@@ -79,32 +79,32 @@ function App() {
 			</div>
       <ProgrammingSection />
       <DesignSection />
-			<div class="section-heading">
+			<div className="section-heading">
 				<h2>Contact</h2>
 			</div>
-			<div class="contact-section mb">
+			<div className="contact-section mb">
 				<a
 					href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com"
 					target="_blank"
-					class="contact-detail"
+					className="contact-detail"
 				>
-					<i class="fa-regular fa-envelope"></i>
+					<i className="fa-regular fa-envelope"></i>
 					<h3>ja&#99;obfeitm&#97;nn&#64;gmail&#46;com</h3>
 				</a>
 				<a
 					href="https://www.instagram.com/i.love.kishka/"
 					target="_blank"
-					class="contact-detail"
+					className="contact-detail"
 				>
-					<i class="fa-brands fa-instagram"></i>
+					<i className="fa-brands fa-instagram"></i>
 					<h3>@i.love.kishka</h3>
 				</a>
 				<a
 					href="https://github.com/jacob-fm"
 					target="_blank"
-					class="contact-detail"
+					className="contact-detail"
 				>
-					<i class="fa-brands fa-github"></i>
+					<i className="fa-brands fa-github"></i>
 					<h3>github.com/jacob-fm</h3>
 				</a>
 			</div>

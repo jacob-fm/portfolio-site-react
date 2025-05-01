@@ -4,10 +4,10 @@ import ProjectOverlay from "./ProjectOverlay";
 const DesignSection = () => {
 	return (
 		<section id="design-work-section">
-			<div class="section-heading">
+			<div className="section-heading">
 				<h2>Design Work</h2>
 			</div>
-			<div class="gallery">
+			<div className="gallery">
 				<DesignThumbnail
 					imageSrc="/media/avid/avid_thumbnail.jpg"
 					imageAlt="AVID Fitness Logo"
@@ -31,7 +31,7 @@ const DesignSection = () => {
 						owner, Avi, and I decided on a new logo that kept some attributes of
 						the old one, but with a more energetic and sleeker feeling.
 					</p>
-					<div class="grid two-columns contain-img-height-180">
+					<div className="grid two-columns contain-img-height-180">
 						<figure>
 							<img
 								src="/media/avid/old_avid_logo.jpeg"
@@ -50,7 +50,7 @@ const DesignSection = () => {
 						</figure>
 					</div>
 					<figure>
-						<div class="grid funky-grid-1">
+						<div className="grid funky-grid-1">
 							<img src="/media/avid/profile_pic_2.png" loading="lazy" />
 							<img src="/media/avid/post1.png" loading="lazy" />
 							<img src="/media/avid/story1.png" loading="lazy" />
@@ -58,7 +58,7 @@ const DesignSection = () => {
 							<img src="/media/avid/multi-image.png" loading="lazy" />
 							<img src="/media/avid/post2.png" loading="lazy" />
 						</div>
-						<figcaption class="mt">
+						<figcaption className="mt">
 							Social media templates and brand assets
 						</figcaption>
 					</figure>
@@ -78,7 +78,7 @@ const DesignSection = () => {
 						customized MindBody’s web widgets to match the brand, and embedded
 						them the HTML of the site.
 					</p>
-					<div class="centered-column">
+					<div className="centered-column">
 						<img
 							src="/media/avid/homepage_screenshot.jpg"
 							alt="AVID Homepage"
@@ -127,7 +127,7 @@ const DesignSection = () => {
 						resembles (albeit abstractly) a skull with a heart on the forehead -
 						a nod to the etymology of the group’s name.
 					</p>
-					<div class="grid two-columns">
+					<div className="grid two-columns">
 						<img
 							src="/media/amoriem/logo_landscape_icon.png"
 							alt="Amoriem logo with icon in landscape orientation"
@@ -159,7 +159,7 @@ const DesignSection = () => {
 					</p>
 					<figure>
 						<img
-							class="img-height-180"
+							className="img-height-180"
 							src="/media/amoriem/new_logo.png"
 							alt="Amoriem Labs' new logo"
 							loading="lazy"
@@ -223,7 +223,7 @@ const DesignSection = () => {
 						along with the artifacts.
 					</p>
 					<h3>Postcards</h3>
-					<div class="grid two-columns mb">
+					<div className="grid two-columns mb">
 						<img
 							src="/media/gaming_counters/postcard1.1.png"
 							alt="First version of promotional postcard, 1/2"
@@ -246,7 +246,7 @@ const DesignSection = () => {
 						/>
 					</div>
 					<h3>Flyers</h3>
-					<div class="centered-row mb">
+					<div className="centered-row mb">
 						<img
 							src="/media/gaming_counters/flyer1.png"
 							alt="Promotional flyer 1"
@@ -270,8 +270,8 @@ const DesignSection = () => {
 						certain angles, an image of the family who owned this token would
 						appear.
 					</p>
-					<div class="centered-row">
-						<video loop autoplay>
+					<div className="centered-row">
+						<video loop autoPlay>
 							<source
 								src="/media/gaming_counters/beinecke_exhibition.mp4"
 								type="video/mp4"
@@ -303,7 +303,7 @@ const DesignSection = () => {
 					</p>
 					<figure>
 						<img
-							class="img-height-220"
+							className="img-height-220"
 							src="/media/grit/grid_system.jpg"
 							alt="Underlying grid structure of GRIT logo"
 							loading="lazy"
@@ -314,7 +314,7 @@ const DesignSection = () => {
 						inspired by trends on social media, I worked with some texture
 						assets to get an effect that I thought worked well.
 					</p>
-					<div class="centered-row">
+					<div className="centered-row">
 						<figure>
 							<img
 								src="/media/grit/first_texture.jpg"
@@ -355,7 +355,7 @@ const DesignSection = () => {
 						access and deeper insights into a company’s accounting and sales
 						statistics.
 					</p>
-					<div class="centered-column contain-img-height-180">
+					<div className="centered-column contain-img-height-180">
 						<img
 							src="/media/nmg/nmg_thumbnail.png"
 							alt="New Matrix Group logo, condensed"
@@ -385,7 +385,7 @@ const DesignSection = () => {
 						it's cute. I remember being pleased with the font at the time (Abril
 						Fatface if you're curious).
 					</p>
-					<div class="centered-column contain-img-height-440">
+					<div className="centered-column contain-img-height-440">
 						<img
 							src="/media/cupcakes_thumbnail.png"
 							alt="Afternoon Cupcakes Logo"

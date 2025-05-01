@@ -1,6 +1,6 @@
 const DesignThumbnail = ({ imageSrc, imageAlt, onClick }) => {
     return (
-        <div class="thumbnail" onClick={onClick}>
+        <div className="thumbnail" onClick={onClick}>
             <img src={imageSrc} alt={imageAlt} />
         </div>
     )

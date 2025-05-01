@@ -190,7 +190,7 @@ video {
     .thumbnail {
       height: 200px; // Change from auto to fixed height
       width: 100%;
-      img { 
+      img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -252,7 +252,15 @@ video {
     }
   }
 
+  .card-thumbnail-container {
+    width: 462px;
+    height: 226px;
+  }
+
   img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
     z-index: 2;
     position: relative;
   }

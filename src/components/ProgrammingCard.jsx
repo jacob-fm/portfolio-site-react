@@ -1,13 +1,13 @@
 const ProgrammingCard = ({ onClick, title, description, imgSrc, imgAlt }) => {
 	return (
-		<div class="project-card" onClick={onClick}>
-			<div class="project-text">
+		<div className="project-card" onClick={onClick}>
+			<div className="project-text">
 				<h2>{title}</h2>
-				<p>
-                    {description}
-				</p>
+				<p>{description}</p>
 			</div>
-			<img src={imgSrc} alt={imgAlt} />
+			<div className="card-thumbnail-container">
+				<img src={imgSrc} alt={imgAlt} />
+			</div>
 		</div>
 	);
 };

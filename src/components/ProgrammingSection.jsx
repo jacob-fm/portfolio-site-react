@@ -4,7 +4,7 @@ import ProjectOverlay from "./ProjectOverlay";
 const ProgrammingSection = () => {
 	return (
 		<section id="programming-work-section">
-			<div class="section-heading">
+			<div className="section-heading">
 				<h2>Programming Work</h2>
 			</div>
 			<ProgrammingCard
@@ -128,7 +128,7 @@ const ProgrammingSection = () => {
 				</p>
 				<figure>
 					<img
-						class="img-height-420"
+						className="img-height-420"
 						src="/media/alien_egg/wide_angle.jpg"
 						alt="Wide angle shot of the Alien Egg sculpture in the gallery"
 					/>
@@ -142,16 +142,13 @@ const ProgrammingSection = () => {
 					circuit such that as people approached the sculpture, the LED strips
 					would shine brighter, and as they moved away, the lights would dim.
 				</p>
-				<div class="centered-column contain-img-height-220">
+				<div className="centered-column contain-img-height-220">
 					<img
 						src="/media/alien_egg/close_up.jpg"
 						alt="Close-up shot of Alien Egg sculpture"
 					/>
 					<video preload="none" width="640" height="360" controls loop muted>
-						<source
-							src="/media/alien_egg/demonstration.mp4"
-							type="video/mp4"
-						/>
+						<source src="/media/alien_egg/demonstration.mp4" type="video/mp4" />
 						Your browser does not support the video tag.
 					</video>
 					<figcaption>Video of the sculpture in action</figcaption>
@@ -186,7 +183,7 @@ const ProgrammingSection = () => {
 						https://github.com/material-kish/high-noon
 					</a>
 				</p>
-				<div class="centered-column mt">
+				<div className="centered-column mt">
 					<img
 						loading="lazy"
 						src="/media/high_noon/cowboy_1.jpg"
@@ -203,6 +200,36 @@ const ProgrammingSection = () => {
 						alt="Screenshot from High Noon 3/3"
 					/>
 				</div>
+			</ProjectOverlay>
+
+			<ProgrammingCard
+				onClick={() => window.showOverlay("this-page")}
+				title="This Website"
+				description="My portfolio website, built with React"
+				imgSrc="/media/portfolio-site-screenshot.png"
+				imgAlt="A screenshot from this website"
+			/>
+			<ProjectOverlay
+				id="this-page"
+				title="This Website"
+				onClose={() => window.hideOverlay("this-page")}
+			>
+				<p>
+					This website was built with&nbsp;
+					<a href="https://reactjs.org/" target="_blank">
+						React
+					</a>
+					.
+				</p>
+				<p>
+					The code is available on GitHub at&nbsp;
+					<a
+						href="https://github.com/jacob-fm/portfolio-site-react"
+						target="_blank"
+					>
+						https://github.com/jacob-fm/portfolio-site-react
+					</a>
+				</p>
 			</ProjectOverlay>
 		</section>
 	);

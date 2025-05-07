@@ -261,6 +261,10 @@ video {
   .card-thumbnail-container {
     width: 462px;
     height: 226px;
+    @include responsive(tablet) {
+      width: 100%;
+      height: auto;
+    }
   }
 
   img {

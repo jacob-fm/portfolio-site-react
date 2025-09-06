@@ -83,7 +83,7 @@ html {
 
 body {
   font-family: $font-stack;
-  color: $japonica-01;
+  color: $japonica-03;
   background-color: $olive-00;
   padding: 3rem;
   @include responsive(mobile) {
@@ -509,8 +509,8 @@ video {
 // pseudo-state styling
 a {
   text-decoration: none;
-  color: $japonica-01;
+  color: $japonica-03;
   &:hover {
-    color: $japonica-03;
+    color: $japonica-01;
   }
 }

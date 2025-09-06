@@ -16,7 +16,7 @@ $olive-04: #7e725f;
 $japonica-00: #fba899;
 $japonica-01: #e28272;
 $japonica-02: #ca6556;
-$japonica-03: #b04b3d;
+$japonica-03: #b04b6c;
 $font-stack:
   "Work Sans",
   -apple-system,
@@ -213,7 +213,7 @@ video {
   justify-content: space-around; /* Ensures space between text and image */
   align-items: center; /* Vertically aligns content */
   padding: 2rem;
-  border: 1px solid $japonica-00; /* Matches the soft red border */
+  border: 1px solid $japonica-03; /* Matches the soft red border */
   margin: 2rem 4rem;
   background-color: $olive-00; /* Fallback background color */
 

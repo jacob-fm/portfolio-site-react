@@ -9,6 +9,6 @@
 
 @layer base {
   body {
-    @apply min-h-full w-full flex flex-col text-primary bg-bg;
+    @apply min-h-full w-full text-primary bg-bg p-4;
   }
 }

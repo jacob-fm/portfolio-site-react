@@ -38,7 +38,7 @@ function App() {
 
   return (
     <>
-      <div id="title-block">
+      <div id="title-block" className="w-full text-center my-6">
         <h1 className="text-4xl">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
           Developer and Designer

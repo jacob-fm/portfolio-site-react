@@ -39,8 +39,10 @@ function App() {
   return (
     <>
       <div id="title-block">
-        <h1>Jacob Feit Mann</h1>
-        <h2>Developer and Designer</h2>
+        <h1 className="text-4xl">Jacob Feit Mann</h1>
+        <h2 className="text-2xl text-stone-600 font-light">
+          Developer and Designer
+        </h2>
       </div>
       <div className="centered-column" id="main-links">
         <a href="#programming-work-section">

@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: Work Sans, sans-serif;
+
+  --color-bg: #f6f2e8;
+  --color-primary: #b04b6c;
+}
+
+@layer base {
+  body {
+    @apply min-h-full w-full flex flex-col text-primary bg-bg;
+  }
+}

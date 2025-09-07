@@ -11,18 +11,18 @@ const ProgrammingSection = () => {
         onClick={() => window.showOverlay("bopmatch-overlay")}
         title="BopMatch - Browser Game"
         description="A browser game where you try and match artists based on their Spotify popularity rating."
-        imgSrc="/media/bopmatch_thumbnail.png"
+        imgSrc="/media/bopmatch/bopmatch_thumbnail.png"
         imgAlt="Screenshot from BopMatch browser game"
       />
       <ProjectOverlay
         id="bopmatch-overlay"
-        title="Spotify Popularity Guessing Game (WIP)"
+        title="BopMatch - Browser Game"
         onClose={() => window.hideOverlay("bopmatch-overlay")}
       >
         <p>
           Check out the game at&nbsp;
-          <a href="https://bopmatch.jacobfm.com" target="_blank">
-            bopmatch.jacobfm.com
+          <a href="https://bopmatch.com" target="_blank">
+            bopmatch.com
           </a>
           ,
           <br />
@@ -32,45 +32,30 @@ const ProgrammingSection = () => {
           </a>
           .
         </p>
+
         <p>
-          This is a browser game I am currently working on as a way to learn
-          React. It's based on a simple game my brothers and I came up with
-          during a long car ride, that goes like this:
-          <ol>
-            <li>
-              One person says the name of a musician or band, which acts as the
-              target.
-            </li>
-            <li>
-              The other players all choose a different musician or band, trying
-              to match the target's monthly listener count on Spotify.
-            </li>
-            <li>
-              The player who's guess is the closest wins the round, and sets the
-              target for the next round.
-            </li>
-            <li>
-              (Obviously, players are not allowed to look things up on their
-              phones until after all the guesses have been submitted.)
-            </li>
-          </ol>
+          In BopMatch, players are shown a <i>target artist</i>{" "}
+          and are tasked with choosing another musician or band who they think
+          will have equivalent <i>popularity.</i>{" "}
+          The closer the two are in popularity, the higher the score.
         </p>
         <p>
-          The current version of the game is different in a few ways. <br />
-          First, it's not multiplayer - I'd love to add a multiplayer mode in
-          the future, but I want to get a really solid single-player mode
-          working first. Instead of players taking turns setting the target for
-          each other, the game is played in 5 rounds, where the target is
-          randomly assinged.
+          <i>Popularity</i> is a statistic available via the{" "}
+          <a href="https://developer.spotify.com/documentation/web-api">
+            Spotify Web API
+          </a>, which I also pull from to allow players to search for and select
+          any musician on Spotify.
         </p>
         <p>
-          Second, players are guessing the popularity rating of the musician or
-          band, not the monthly listener count. This is because Spotify doesn't
-          expose monthly listener count via API, even though it is visible to
-          users. At first I was worried that this would make the game less
-          compelling, but after some feedback from friends and family, the game
-          seems to be pretty entertaining as is.
+          BopMatch was built using React and Vite on the front-end, and Supabase
+          for the backend.
         </p>
+        <figure>
+          <img
+            src="/media/bopmatch/homepage.png"
+            alt="Screenshot of BopMatch"
+          />
+        </figure>
       </ProjectOverlay>
 
       <ProgrammingCard

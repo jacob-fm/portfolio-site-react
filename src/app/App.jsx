@@ -36,18 +36,20 @@ function App() {
         </h2>
       </div>
       <div
-        className="flex w-full justify-center gap-4 mb-8"
+        className="flex w-full justify-center gap-6 mb-8"
         id="contact-icons"
       >
         <a href="https://www.instagram.com/i.love.kishka/" target="_blank">
-          <i className="fa-brands fa-instagram text-2xl text-primary">
+          <i className="fa-brands fa-instagram text-2xl md:text-4xl text-primary">
           </i>
         </a>
         <a href="https://github.com/jacob-fm" target="_blank">
-          <i className="fa-brands fa-github text-2xl text-primary"></i>
+          <i className="fa-brands fa-github text-2xl md:text-4xl text-primary">
+          </i>
         </a>
         <a href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com">
-          <i className="fa-regular fa-envelope text-2xl text-primary"></i>
+          <i className="fa-regular fa-envelope text-2xl md:text-4xl text-primary">
+          </i>
         </a>
       </div>
       <div className="flex flex-col gap-7 mx-auto max-w-160">

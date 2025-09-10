@@ -4,7 +4,7 @@ export default function Bopmatch() {
   return (
     <ProjectPage title="BopMatch">
       <LinkButton route="https://bopmatch.com">
-        <i className="fa-solid fa-gamepad "></i>Play BopMatch!
+        <i className="fa-solid fa-gamepad "></i>Play BopMatch
       </LinkButton>
       <LinkButton route="https://github.com/jacob-fm/spotify-guesser">
         <i className="fa-brands fa-github "></i>

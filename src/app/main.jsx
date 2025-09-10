@@ -8,6 +8,7 @@ import AlienEgg from "../routes/AlienEgg.jsx";
 import Avid from "../routes/Avid.jsx";
 import Amoriem from "../routes/Amoriem.jsx";
 import GamingTokens from "../routes/GamingTokens.jsx";
+import MiscLogos from "../routes/MiscLogos.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/tokens",
     element: <GamingTokens />,
+  },
+  {
+    path: "/misc-logos",
+    element: <MiscLogos />,
   },
 ]);
 

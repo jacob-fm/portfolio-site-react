@@ -3,7 +3,7 @@
 @theme {
   --font-sans: Work Sans, sans-serif;
 
-  --color-bg: #fffefa;
+  --color-bg: #fffef7;
   --color-primary: #b04b6c;
   --color-primary-dark: #993f5a;
 }
@@ -15,5 +15,9 @@
   
   a {
     @apply text-blue-600 visited:text-blue-900;
+  }
+
+  figcaption {
+    @apply text-center text-stone-500;
   }
 }

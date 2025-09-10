@@ -33,7 +33,7 @@ export default function AlienEgg() {
           src="/media/alien_egg/wide_angle.jpg"
           alt="Wide angle shot of the Alien Egg sculpture in the gallery"
         />
-        <figcaption className="text-center text-stone-500">
+        <figcaption>
           The egg sitting in its enclave
         </figcaption>
       </figure>
@@ -54,7 +54,7 @@ export default function AlienEgg() {
           <source src="/media/alien_egg/demonstration.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <figcaption className="text-center text-stone-500">
+        <figcaption>
           Video of the sculpture in action
         </figcaption>
       </div>

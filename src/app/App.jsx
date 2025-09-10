@@ -25,6 +25,11 @@ function App() {
       route: "/avid",
       image: "/media/avid/avid_thumbnail.jpg",
     },
+    {
+      title: "Amoriem Labs",
+      route: "/amoriem",
+      image: "/media/amoriem/amoriem_thumbnail.jpg",
+    },
   ];
 
   return (

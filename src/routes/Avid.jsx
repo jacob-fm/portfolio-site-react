@@ -24,7 +24,7 @@ export default function Avid() {
             alt="Old AVID Fitness logo"
             loading="lazy"
           />
-          <figcaption className="text-center text-stone-500">
+          <figcaption>
             Old logo
           </figcaption>
         </figure>
@@ -34,7 +34,7 @@ export default function Avid() {
             alt="New AVID Fitness logo, white on blue background"
             loading="lazy"
           />
-          <figcaption className="text-center text-stone-500">
+          <figcaption>
             New logo
           </figcaption>
         </figure>

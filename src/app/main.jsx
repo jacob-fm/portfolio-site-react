@@ -6,6 +6,7 @@ import Bopmatch from "../routes/Bopmatch.jsx";
 import MIDI from "../routes/MIDI.jsx";
 import AlienEgg from "../routes/AlienEgg.jsx";
 import Avid from "../routes/Avid.jsx";
+import Amoriem from "../routes/Amoriem.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/avid",
     element: <Avid />,
+  },
+  {
+    path: "/amoriem",
+    element: <Amoriem />,
   },
 ]);
 

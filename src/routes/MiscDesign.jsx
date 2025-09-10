@@ -1,8 +1,8 @@
 import ProjectPage from "../components/ProjectPage";
 
-export default function MiscLogos() {
+export default function MiscDesign() {
   return (
-    <ProjectPage title="Misc. Logo Designs">
+    <ProjectPage title="Misc. Design Things">
       <h2>New Matrix Group</h2>
       <p>
         While helping build some of the underlying data pipelines for a business

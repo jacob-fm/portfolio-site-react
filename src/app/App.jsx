@@ -35,6 +35,11 @@ function App() {
       route: "/tokens",
       image: "/media/gaming_counters/gaming_counters_thumbnail.png",
     },
+    {
+      title: "Miscellaneous Design Work",
+      route: "/misc-design",
+      image: "/media/misc_thumbnail.png",
+    },
   ];
 
   return (

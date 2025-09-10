@@ -6,7 +6,7 @@ export default function ThumbnailCard({ title, route, image }) {
       to={route}
     >
       {/* <h2>{title}</h2> */}
-      <div className="h-50 shadow-xl border border-solid border-primary">
+      <div className="h-50 md:h-60 shadow-lg border border-solid border-primary transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl">
         <img src={image} className="object-cover h-full w-full" />
       </div>
     </Link>

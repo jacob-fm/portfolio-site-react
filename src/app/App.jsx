@@ -50,7 +50,7 @@ function App() {
           <i className="fa-regular fa-envelope text-2xl text-primary"></i>
         </a>
       </div>
-      <div className="flex flex-col gap-7">
+      <div className="flex flex-col gap-7 mx-auto max-w-160">
         {thumbnails.map((t, idx) => <ThumbnailCard {...t} key={idx} />)}
       </div>
       {/* <script type="module" src="/src/main.js"></script> */}

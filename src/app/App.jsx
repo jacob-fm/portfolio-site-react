@@ -30,6 +30,11 @@ function App() {
       route: "/amoriem",
       image: "/media/amoriem/amoriem_thumbnail.jpg",
     },
+    {
+      title: "Yale Collections: 18th Century Chinese Gaming Tokens",
+      route: "/tokens",
+      image: "/media/gaming_counters/gaming_counters_thumbnail.png",
+    },
   ];
 
   return (

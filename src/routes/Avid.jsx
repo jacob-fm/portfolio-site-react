@@ -10,7 +10,7 @@ export default function Avid() {
         owner, Avi, and I decided on a new logo that kept some attributes of the
         old one, but with a more energetic and sleeker feeling.
       </p>
-      <h2 className="text-xl mt-5 text-center">Logo and Branding</h2>
+      <h2>Logo and Branding</h2>
       <p>
         AVID's greatest asset is its strong sense of community, so while we
         experimented with some pretty "out-there" ideas for the rebrand, the
@@ -49,7 +49,7 @@ export default function Avid() {
           <img src="/media/avid/post2.png" loading="lazy" />
         </div>
       </figure>
-      <h2 className="text-xl mt-8 text-center">Website</h2>
+      <h2 className="mt-8">Website</h2>
       <LinkButton route="https://avidstrong.com">
         <i className="fa-solid fa-globe"></i>AVID Website
       </LinkButton>

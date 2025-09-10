@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function ProjectPage({ title, children }) {
   return (
-    <div className="max-w-200 mx-auto">
+    <div className="project-page max-w-200 mx-auto">
       <h1 className="text-2xl text-center mt-6">{title}</h1>
       <hr className="m-6"></hr>
       <div className="space-y-4">{children}</div>

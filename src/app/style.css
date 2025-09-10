@@ -20,4 +20,8 @@
   figcaption {
     @apply text-center text-stone-500;
   }
+
+  .project-page h2 {
+    @apply text-xl mt-5 text-center;
+  }
 }

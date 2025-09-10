@@ -7,6 +7,7 @@ import MIDI from "../routes/MIDI.jsx";
 import AlienEgg from "../routes/AlienEgg.jsx";
 import Avid from "../routes/Avid.jsx";
 import Amoriem from "../routes/Amoriem.jsx";
+import GamingTokens from "../routes/GamingTokens.jsx";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/amoriem",
     element: <Amoriem />,
+  },
+  {
+    path: "/tokens",
+    element: <GamingTokens />,
   },
 ]);
 

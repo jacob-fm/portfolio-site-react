@@ -1,9 +1,8 @@
+import ProjectPage from "../components/ProjectPage";
 import LinkButton from "../components/LinkButton";
 export default function Bopmatch() {
   return (
-    <>
-      <h1 className="text-2xl text-center mt-6">BopMatch</h1>
-      <hr className="m-6"></hr>
+    <ProjectPage title="BopMatch">
       <LinkButton route="https://bopmatch.com">
         <i className="fa-solid fa-gamepad "></i>Play BopMatch!
       </LinkButton>
@@ -34,6 +33,6 @@ export default function Bopmatch() {
           alt="Screenshot of BopMatch"
         />
       </figure>
-    </>
+    </ProjectPage>
   );
 }

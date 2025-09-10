@@ -43,6 +43,16 @@ function App() {
       route: "/bopmatch",
       image: "/media/bopmatch/bopmatch_thumbnail.png",
     },
+    {
+      title: "Alien Egg Sculpture",
+      route: "alien-egg",
+      image: "/media/alien_egg/brain_rock_thumbnail.png",
+    },
+    {
+      title: "MIDI Signal Augmenter",
+      route: "/midi",
+      image: "/media/midi_thumbnail.png",
+    },
   ];
 
   return (
@@ -58,16 +68,19 @@ function App() {
         id="contact-icons"
       >
         <a href="https://www.instagram.com/i.love.kishka/" target="_blank">
-          <i className="fa-brands fa-instagram text-2xl"></i>
+          <i className="fa-brands fa-instagram text-2xl text-primary">
+          </i>
         </a>
         <a href="https://github.com/jacob-fm" target="_blank">
-          <i className="fa-brands fa-github text-2xl"></i>
+          <i className="fa-brands fa-github text-2xl text-primary"></i>
         </a>
         <a href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com">
-          <i className="fa-regular fa-envelope text-2xl"></i>
+          <i className="fa-regular fa-envelope text-2xl text-primary"></i>
         </a>
       </div>
-      {thumbnails.map((t, idx) => <ThumbnailCard {...t} key={idx} />)}
+      <div className="flex flex-col gap-7">
+        {thumbnails.map((t, idx) => <ThumbnailCard {...t} key={idx} />)}
+      </div>
       {/* <script type="module" src="/src/main.js"></script> */}
     </>
   );

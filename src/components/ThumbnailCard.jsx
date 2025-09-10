@@ -6,7 +6,7 @@ export default function ThumbnailCard({ title, route, image }) {
       to={route}
     >
       {/* <h2>{title}</h2> */}
-      <div className="h-50 shadow-2xl border border-solid border-primary">
+      <div className="h-50 shadow-xl border border-solid border-primary">
         <img src={image} className="object-cover h-full w-full" />
       </div>
     </Link>

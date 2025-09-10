@@ -12,4 +12,8 @@
   body {
     @apply min-h-full w-full text-primary bg-bg p-4;
   }
+  
+  a {
+    @apply text-blue-600 visited:text-blue-900;
+  }
 }

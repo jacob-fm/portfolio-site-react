@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Bopmatch from "../routes/Bopmatch.jsx";
+import MIDI from "../routes/MIDI.jsx";
+import AlienEgg from "../routes/AlienEgg.jsx";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +16,14 @@ const router = createBrowserRouter([
   {
     path: "/bopmatch",
     element: <Bopmatch />,
+  },
+  {
+    path: "/alien-egg",
+    element: <AlienEgg />,
+  },
+  {
+    path: "/midi",
+    element: <MIDI />,
   },
 ]);
 

@@ -5,6 +5,7 @@
 
   --color-bg: #f6f2e8;
   --color-primary: #b04b6c;
+  --color-primary-dark: #993f5a;
 }
 
 @layer base {

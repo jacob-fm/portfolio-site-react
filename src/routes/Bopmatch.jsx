@@ -2,9 +2,15 @@ import LinkButton from "../components/LinkButton";
 export default function Bopmatch() {
   return (
     <>
-      <h1 className="text-2xl text-center">BopMatch</h1>
+      <h1 className="text-2xl text-center mt-6">BopMatch</h1>
       <hr className="m-6"></hr>
-      <LinkButton route="https://bopmatch.com">Play BopMatch!</LinkButton>
+      <LinkButton route="https://bopmatch.com">
+        <i className="fa-solid fa-gamepad "></i>Play BopMatch!
+      </LinkButton>
+      <LinkButton route="https://github.com/jacob-fm/spotify-guesser">
+        <i className="fa-brands fa-github "></i>
+        Github Repo
+      </LinkButton>
       <p>
         In BopMatch, players are shown a <i>target artist</i>{" "}
         and are tasked with choosing another musician or band who they think
@@ -22,7 +28,7 @@ export default function Bopmatch() {
         BopMatch was built using React and Vite on the front-end, and Supabase
         for the backend.
       </p>
-      <figure>
+      <figure className="my-4 border border-primary">
         <img
           src="/media/bopmatch/homepage.png"
           alt="Screenshot of BopMatch"

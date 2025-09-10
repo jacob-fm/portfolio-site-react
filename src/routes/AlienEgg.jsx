@@ -49,8 +49,8 @@ export default function AlienEgg() {
         src="/media/alien_egg/close_up.jpg"
         alt="Close-up shot of Alien Egg sculpture"
       />
-      <div className="space-y-2">
-        <video preload="none" width="640" height="360" controls loop muted>
+      <div className="space-y-2 flex flex-col ">
+        <video preload="none" controls loop muted className="aspect-video">
           <source src="/media/alien_egg/demonstration.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>

@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Bopmatch from "../routes/Bopmatch.jsx";
 import MIDI from "../routes/MIDI.jsx";
 import AlienEgg from "../routes/AlienEgg.jsx";
+import Avid from "../routes/Avid.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/midi",
     element: <MIDI />,
+  },
+  {
+    path: "/avid",
+    element: <Avid />,
   },
 ]);
 

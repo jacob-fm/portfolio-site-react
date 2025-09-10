@@ -1,8 +1,14 @@
-export default function ThumbnailCard({ title, image }) {
+import { Link } from "react-router-dom";
+
+export default function ThumbnailCard({ title, route, image }) {
   return (
-    <div className="h-50 shadow-2xl border border-solid border-primary">
+    <Link
+      to={route}
+    >
       {/* <h2>{title}</h2> */}
-      <img src={image} className="object-cover h-full w-full" />
-    </div>
+      <div className="h-50 shadow-2xl border border-solid border-primary">
+        <img src={image} className="object-cover h-full w-full" />
+      </div>
+    </Link>
   );
 }

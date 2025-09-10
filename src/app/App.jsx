@@ -38,7 +38,11 @@ function App() {
   // });
 
   const thumbnails = [
-    { title: "BopMatch", image: "/media/bopmatch/bopmatch_thumbnail.png" },
+    {
+      title: "BopMatch",
+      route: "/bopmatch",
+      image: "/media/bopmatch/bopmatch_thumbnail.png",
+    },
   ];
 
   return (
@@ -63,9 +67,7 @@ function App() {
           <i className="fa-regular fa-envelope text-2xl"></i>
         </a>
       </div>
-      {thumbnails.map((t, idx) => (
-        <ThumbnailCard title={t.title} image={t.image} key={idx} />
-      ))}
+      {thumbnails.map((t, idx) => <ThumbnailCard {...t} key={idx} />)}
       {/* <script type="module" src="/src/main.js"></script> */}
     </>
   );

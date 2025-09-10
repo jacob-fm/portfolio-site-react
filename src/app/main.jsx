@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Bopmatch from "../routes/Bopmatch.jsx";
 
 const router = createBrowserRouter([
   {
@@ -9,6 +10,10 @@ const router = createBrowserRouter([
     element: <App />,
     // TODO: Create 404 page
     // errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/bopmatch",
+    element: <Bopmatch />,
   },
 ]);
 

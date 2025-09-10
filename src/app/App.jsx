@@ -1,5 +1,3 @@
-import DesignSection from "../components/DesignSection";
-import ProgrammingSection from "../components/ProgrammingSection";
 import ThumbnailCard from "../components/ThumbnailCard";
 import "./style.css";
 

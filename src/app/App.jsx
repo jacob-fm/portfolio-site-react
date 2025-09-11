@@ -7,31 +7,37 @@ function App() {
       title: "BopMatch",
       route: "/bopmatch",
       image: "/media/bopmatch/bopmatch_thumbnail.png",
+      badges: ["JavaScript", "React", "Supabase", "Vite", "Netlify"],
     },
     {
-      title: "Alien Egg Sculpture",
+      title: '"Alien Egg" Sculpture',
       route: "alien-egg",
       image: "/media/alien_egg/brain_rock_thumbnail.png",
+      badges: ["Arduino", "Sculpture"],
     },
     {
       title: "MIDI Signal Augmenter",
       route: "/midi",
       image: "/media/midi_thumbnail.png",
+      badges: ["SuperCollider"],
     },
     {
       title: "AVID Fitness",
       route: "/avid",
       image: "/media/avid/avid_thumbnail.jpg",
+      badges: ["Branding", "Logo Design", "WordPress"],
     },
     {
       title: "Amoriem Labs",
       route: "/amoriem",
       image: "/media/amoriem/amoriem_thumbnail.jpg",
+      badges: ["Branding", "Logo Design"],
     },
     {
       title: "Yale Collections: 18th Century Chinese Gaming Tokens",
       route: "/tokens",
       image: "/media/gaming_counters/gaming_counters_thumbnail.png",
+      badges: ["Branding", "Poster Design"],
     },
     {
       title: "Miscellaneous Design Work",

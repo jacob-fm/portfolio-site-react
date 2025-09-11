@@ -9,13 +9,14 @@ import Avid from "../routes/Avid.jsx";
 import Amoriem from "../routes/Amoriem.jsx";
 import GamingTokens from "../routes/GamingTokens.jsx";
 import MiscDesign from "../routes/MiscDesign.jsx";
+import NotFoundPage from "../routes/NotFoundPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    // TODO: Create 404 page
-    // errorElement: <NotFoundPage />,
+    // TODO: better 404 page
+    errorElement: <NotFoundPage />,
   },
   {
     path: "/bopmatch",

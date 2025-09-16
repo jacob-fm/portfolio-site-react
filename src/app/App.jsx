@@ -51,7 +51,7 @@ function App() {
       <div id="title-block" className="w-full text-center my-8">
         <h1 className="text-4xl">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
-          Developer and Designer
+          Software Engineer & Artist
         </h2>
       </div>
       <div

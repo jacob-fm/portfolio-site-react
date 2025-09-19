@@ -44,6 +44,11 @@ function App() {
       route: "/misc-design",
       image: "/media/misc_thumbnail.png",
     },
+    {
+      title: "Nigunnim",
+      route: "/nigunnim",
+      image: "/media/nigunnim/thumbnail.JPG",
+    },
   ];
 
   return (

@@ -4,15 +4,17 @@ export default function Nigunnim() {
   return (
     <ProjectPage title="Nigunnim">
       <p>
-        "Nigunnim" was an artwork I created for the Blanksteen Fellowship, at
-        the Joseph Slifka Center for Jewish Life at Yale in 2023. I, along with
-        the rest of the cohort, were given the phrase "How does speech become
-        violence?" as a prompt for our work. I was inspired to use a mixture of
-        audio and video synthesis tools to explore wordless tunes, similar to
-        the "nigunnim" I grew up with.
+        "Nigunnim" was an audiovisual installtion I created for the Blanksteen
+        Fellowship, at the Joseph Slifka Center for Jewish Life at Yale in 2023.
+        I, along with the rest of the cohort, were given the phrase "How does
+        speech become violence?" as a prompt for our work. I was inspired to
+        create a pair of songs similar to the "nigunnim" I grew up with. For
+        each song, I created a video using a program called{" "}
+        <a href="https://www.ebosuite.com/">EboSuite</a>{" "}
+        which can generate shaders that react to audio information.
       </p>
       <p>
-        From my artist statement:
+        An excerpt from my artist statement:
       </p>
       <blockquote className="bg-bg-dark">
         <p>
@@ -37,6 +39,18 @@ export default function Nigunnim() {
           even more immersive atmosphere.
         </p>
       </blockquote>
+      <h2 className="mt-6 mb-2">Some clips from the installation</h2>
+      <p className="text-center mb-4">
+        <i>(Muted by default)</i>
+      </p>
+      <video preload="none" controls loop muted className="aspect-video w-full">
+        <source src="/media/nigunnim/pink.mov" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <video preload="none" controls loop muted className="aspect-video w-full">
+        <source src="/media/nigunnim/green.mov" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </ProjectPage>
   );
 }

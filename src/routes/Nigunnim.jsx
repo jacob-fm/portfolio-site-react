@@ -2,7 +2,7 @@ import ProjectPage from "../components/ProjectPage";
 
 export default function Nigunnim() {
   return (
-    <ProjectPage title="Nigunnim">
+    <ProjectPage title='"Nigunnim"'>
       <p>
         "Nigunnim" was an audiovisual installtion I created for the Blanksteen
         Fellowship, at the Joseph Slifka Center for Jewish Life at Yale in 2023.

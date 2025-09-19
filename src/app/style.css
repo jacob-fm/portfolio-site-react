@@ -4,6 +4,7 @@
   --font-sans: Work Sans, sans-serif;
 
   --color-bg: #fffef7;
+  --color-bg-dark: #ebe9e1;
   --color-primary: #b04b6c;
   --color-primary-dark: #993f5a;
 }
@@ -19,6 +20,10 @@
 
   figcaption {
     @apply text-center text-stone-500;
+  }
+
+  blockquote {
+    @apply mx-4 p-4 text-primary-dark;
   }
 
   .project-page h2 {

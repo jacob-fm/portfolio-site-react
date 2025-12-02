@@ -1,4 +1,5 @@
 import ThumbnailCard from "../components/ThumbnailCard";
+import AnimatedBackground from "../components/AnimatedBackground";
 import "./style.css";
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
 
   return (
     <>
+      <AnimatedBackground />
       <div id="title-block" className="w-full text-center my-8">
         <h1 className="text-4xl">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">

@@ -16,22 +16,16 @@ function App() {
       badges: ["Arduino", "Sculpture"],
     },
     {
+      title: '"Nigunim"',
+      route: "/nigunim",
+      image: "/media/nigunim/thumbnail.JPG",
+      badges: ["Music", "Video Art"],
+    },
+    {
       title: "MIDI Signal Augmenter",
       route: "/midi",
       image: "/media/midi_thumbnail.png",
       badges: ["SuperCollider"],
-    },
-    {
-      title: "AVID Fitness",
-      route: "/avid",
-      image: "/media/avid/avid_thumbnail.jpg",
-      badges: ["Branding", "Logo Design", "WordPress"],
-    },
-    {
-      title: "Amoriem Labs",
-      route: "/amoriem",
-      image: "/media/amoriem/amoriem_thumbnail.jpg",
-      badges: ["Branding", "Logo Design"],
     },
     {
       title: "Yale Collections: 18th Century Chinese Gaming Tokens",
@@ -39,16 +33,22 @@ function App() {
       image: "/media/gaming_counters/gaming_counters_thumbnail.png",
       badges: ["Branding", "Poster Design"],
     },
+    // {
+    //   title: "AVID Fitness",
+    //   route: "/avid",
+    //   image: "/media/avid/avid_thumbnail.jpg",
+    //   badges: ["Branding", "Logo Design", "WordPress"],
+    // },
+    // {
+    //   title: "Amoriem Labs",
+    //   route: "/amoriem",
+    //   image: "/media/amoriem/amoriem_thumbnail.jpg",
+    //   badges: ["Branding", "Logo Design"],
+    // },
     {
       title: "Miscellaneous Design Work",
       route: "/misc-design",
       image: "/media/misc_thumbnail.png",
-    },
-    {
-      title: '"Nigunim"',
-      route: "/nigunim",
-      image: "/media/nigunim/thumbnail.JPG",
-      badges: ["Music", "Video Art"],
     },
   ];
 

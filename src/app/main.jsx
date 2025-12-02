@@ -10,7 +10,7 @@ import Amoriem from "../routes/Amoriem.jsx";
 import GamingTokens from "../routes/GamingTokens.jsx";
 import MiscDesign from "../routes/MiscDesign.jsx";
 import NotFoundPage from "../routes/NotFoundPage.jsx";
-import Nigunnim from "../routes/Nigunnim.jsx";
+import Nigunim from "../routes/Nigunim.jsx";
 
 const router = createBrowserRouter([
   {
@@ -44,8 +44,8 @@ const router = createBrowserRouter([
     element: <GamingTokens />,
   },
   {
-    path: "/nigunnim",
-    element: <Nigunnim />,
+    path: "/nigunim",
+    element: <Nigunim />,
   },
   {
     path: "/misc-design",

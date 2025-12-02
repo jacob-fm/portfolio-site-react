@@ -1,21 +1,23 @@
 import ProjectPage from "../components/ProjectPage";
 
-export default function Nigunnim() {
+export default function Nigunim() {
   return (
-    <ProjectPage title='"Nigunnim"'>
+    <ProjectPage title='"Nigunim"'>
+      <iframe
+        src="https://www.youtube.com/embed/YtC4rZa81dY"
+        className="aspect-video"
+      ></iframe>
       <p>
-        "Nigunnim" was an audiovisual installtion I created for the Blanksteen
+        "Nigunim" was an audiovisual installtion I created for the Blanksteen
         Fellowship, at the Joseph Slifka Center for Jewish Life at Yale in 2023.
         I, along with the rest of the cohort, were given the phrase "How does
         speech become violence?" as a prompt for our work. I was inspired to
-        create a pair of songs similar to the "nigunnim" I grew up with. For
-        each song, I created a video using a program called{" "}
-        <a href="https://www.ebosuite.com/">EboSuite</a>{" "}
-        which can generate shaders that react to audio information.
+        create a pair of songs similar to the "nigunim" I grew up with. For each
+        song, I created a video using a program called{" "}
+        <a href="https://www.ebosuite.com/">EboSuite</a> which can generate
+        shaders that react to audio information.
       </p>
-      <p>
-        An excerpt from my artist statement:
-      </p>
+      <p>An excerpt from my artist statement:</p>
       <blockquote className="bg-bg-dark">
         <p>
           When approaching the themes of speech and violence, I dug in to find
@@ -23,7 +25,7 @@ export default function Nigunnim() {
           I thought about violence due to lack of speech, and the frustration
           and anger that can arise when words fail. I thought back to my days in
           summer camp; in particular, I remembered debates with a friend on
-          whether the nigunnim (tunes) we sang on Shabbat were better with or
+          whether the nigunim (tunes) we sang on Shabbat were better with or
           without lyrics.
         </p>
         <br />
@@ -32,11 +34,11 @@ export default function Nigunnim() {
           tapping into something deeper and truer than what our words could say.
           At the time I thought it was nonsensical and silly. Looking back, I'm
           not so sure. This piece was an opportunity to take what l've learned
-          about music production to explore and compose nigunnim that make use
-          of modern electronic instrumentation while incorporating the
-          meditative, trance-like qualities of a wordless nigun. I used the
-          accompanying visuals to transform a purely auditory experience into an
-          even more immersive atmosphere.
+          about music production to explore and compose nigunim that make use of
+          modern electronic instrumentation while incorporating the meditative,
+          trance-like qualities of a wordless nigun. I used the accompanying
+          visuals to transform a purely auditory experience into an even more
+          immersive atmosphere.
         </p>
       </blockquote>
       <h2 className="mt-6 mb-2">Some clips from the installation</h2>
@@ -44,11 +46,11 @@ export default function Nigunnim() {
         <i>(Muted by default)</i>
       </p>
       <video preload="none" controls loop muted className="aspect-video w-full">
-        <source src="/media/nigunnim/pink.mov" type="video/mp4" />
+        <source src="/media/nigunim/pink.mov" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <video preload="none" controls loop muted className="aspect-video w-full">
-        <source src="/media/nigunnim/green.mov" type="video/mp4" />
+        <source src="/media/nigunim/green.mov" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </ProjectPage>

@@ -53,9 +53,9 @@ function AnimatedBackground() {
         const age = now - point.timestamp;
         const lifePercent = 1 - age / 1000;
         const opacity = lifePercent * 0.6;
-        const size = 20 + (trailPoints.current.length - index) * 3;
+        const size = 15 + (trailPoints.current.length - index) * 2;
 
-        // Create gradient for glow effect
+        // Create gradient for glow effect with hue shift
         const gradient = ctx.createRadialGradient(
           point.x,
           point.y,
@@ -65,9 +65,12 @@ function AnimatedBackground() {
           size
         );
 
-        gradient.addColorStop(0, `rgba(176, 75, 108, ${opacity})`);
-        gradient.addColorStop(0.5, `rgba(176, 75, 108, ${opacity * 0.5})`);
-        gradient.addColorStop(1, `rgba(176, 75, 108, 0)`);
+        gradient.addColorStop(0, `hsla(340, 40%, 49%, ${opacity})`);
+        gradient.addColorStop(0.2, `hsla(345, 45%, 52%, ${opacity * 0.8})`);
+        gradient.addColorStop(0.4, `hsla(350, 50%, 55%, ${opacity * 0.5})`);
+        gradient.addColorStop(0.6, `hsla(355, 55%, 60%, ${opacity * 0.25})`);
+        gradient.addColorStop(0.8, `hsla(0, 60%, 65%, ${opacity * 0.1})`);
+        gradient.addColorStop(1, `hsla(5, 60%, 70%, 0)`);
 
         ctx.fillStyle = gradient;
         ctx.fillRect(

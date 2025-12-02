@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-function AnimatedBackground() {
+function AnimatedBackground({ mode }) {
   const canvasRef = useRef(null);
   const trailPoints = useRef([]);
   const maxTrailLength = 30;
@@ -65,12 +65,22 @@ function AnimatedBackground() {
           size
         );
 
-        gradient.addColorStop(0, `hsla(340, 40%, 49%, ${opacity})`);
-        gradient.addColorStop(0.2, `hsla(345, 45%, 52%, ${opacity * 0.8})`);
-        gradient.addColorStop(0.4, `hsla(350, 50%, 55%, ${opacity * 0.5})`);
-        gradient.addColorStop(0.6, `hsla(355, 55%, 60%, ${opacity * 0.25})`);
-        gradient.addColorStop(0.8, `hsla(0, 60%, 65%, ${opacity * 0.1})`);
-        gradient.addColorStop(1, `hsla(5, 60%, 70%, 0)`);
+        // Color scheme based on mode
+        if (mode === "blue") {
+          gradient.addColorStop(0, `hsla(200, 40%, 92%, ${opacity * 0.4})`);
+          gradient.addColorStop(0.2, `hsla(200, 38%, 88%, ${opacity * 0.32})`);
+          gradient.addColorStop(0.4, `hsla(200, 35%, 84%, ${opacity * 0.2})`);
+          gradient.addColorStop(0.6, `hsla(200, 32%, 80%, ${opacity * 0.1})`);
+          gradient.addColorStop(0.8, `hsla(200, 30%, 76%, ${opacity * 0.04})`);
+          gradient.addColorStop(1, `hsla(200, 28%, 72%, 0)`);
+        } else {
+          gradient.addColorStop(0, `hsla(355, 65%, 70%, ${opacity})`);
+          gradient.addColorStop(0.2, `hsla(350, 60%, 65%, ${opacity * 0.8})`);
+          gradient.addColorStop(0.4, `hsla(345, 50%, 58%, ${opacity * 0.5})`);
+          gradient.addColorStop(0.6, `hsla(342, 45%, 52%, ${opacity * 0.25})`);
+          gradient.addColorStop(0.8, `hsla(340, 40%, 48%, ${opacity * 0.1})`);
+          gradient.addColorStop(1, `hsla(338, 40%, 45%, 0)`);
+        }
 
         ctx.fillStyle = gradient;
         ctx.fillRect(

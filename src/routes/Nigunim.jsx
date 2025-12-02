@@ -45,14 +45,16 @@ export default function Nigunim() {
       <p className="text-center mb-4">
         <i>(Muted by default)</i>
       </p>
-      <video preload="none" controls loop muted className="aspect-video w-full">
-        <source src="/media/nigunim/pink.mov" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <video preload="none" controls loop muted className="aspect-video w-full">
-        <source src="/media/nigunim/green.mov" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <div className="grid grid-cols-2 gap-2">
+        <video preload="auto" controls loop muted className="w-full">
+          <source src="/media/nigunim/pink.mov" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <video preload="auto" controls loop muted className="w-full">
+          <source src="/media/nigunim/green.mov" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
     </ProjectPage>
   );
 }

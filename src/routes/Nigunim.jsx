@@ -5,7 +5,7 @@ export default function Nigunim() {
     <ProjectPage title='"Nigunim"'>
       <iframe
         src="https://www.youtube.com/embed/YtC4rZa81dY"
-        className="aspect-video"
+        className="block mx-auto w-full aspect-video"
       ></iframe>
       <p>
         "Nigunim" was an audiovisual installtion I created for the Blanksteen

@@ -8,12 +8,12 @@ export default function Nigunim() {
         className="block mx-auto w-full aspect-video"
       ></iframe>
       <p>
-        "Nigunim" was an audiovisual installation I created for the Blanksteen
-        Fellowship, at the Joseph Slifka Center for Jewish Life at Yale in 2023.
-        I, along with the rest of the cohort, were given the phrase "How does
-        speech become violence?" as a prompt for our work. I was inspired to
-        create a pair of songs similar to the "nigunim" I grew up with. For each
-        song, I created a video using a program called{" "}
+        "Nigunim" was a video artwork I created for the Blanksteen Fellowship,
+        at the Joseph Slifka Center for Jewish Life at Yale in 2023. I, along
+        with the rest of the cohort, were given the phrase "How does speech
+        become violence?" as a prompt for our work. I was inspired to create a
+        pair of songs similar to the "nigunim" I grew up with. For each song, I
+        created a video using a program called{" "}
         <a href="https://www.ebosuite.com/">EboSuite</a> which can generate
         shaders that react to audio information.
       </p>

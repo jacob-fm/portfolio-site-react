@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import AnimatedBackground from "../components/AnimatedBackground";
 import { getAllPosts, getAllTags } from "../lib/blog";
 
 export default function Blog() {
@@ -20,7 +19,6 @@ export default function Blog() {
 
   return (
     <div className="max-w-200 mx-auto">
-      <AnimatedBackground mode="blue" />
       <h1 className="text-2xl text-center mt-6">Blog</h1>
       <hr className="m-6" />
 

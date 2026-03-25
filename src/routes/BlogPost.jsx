@@ -2,7 +2,6 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import AnimatedBackground from "../components/AnimatedBackground";
 import { getPostBySlug } from "../lib/blog";
 
 export default function BlogPost() {
@@ -16,7 +15,6 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="max-w-200 mx-auto text-center mt-20">
-        <AnimatedBackground mode="blue" />
         <h1 className="text-2xl mb-4">Post not found</h1>
         <Link
           to="/blog"
@@ -31,7 +29,6 @@ export default function BlogPost() {
 
   return (
     <div className="project-page max-w-200 mx-auto">
-      <AnimatedBackground mode="blue" />
       <h1 className="text-2xl text-center mt-6">{post.title}</h1>
       <p className="text-center text-stone-500 mt-2">
         {new Date(post.date + "T00:00:00").toLocaleDateString("en-US", {

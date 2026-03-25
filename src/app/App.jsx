@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import ThumbnailCard from "../components/ThumbnailCard";
-import AnimatedBackground from "../components/AnimatedBackground";
 import "./style.css";
 
 function App() {
@@ -56,7 +55,6 @@ function App() {
 
   return (
     <div className="relative">
-      <AnimatedBackground />
       {/* Desktop: top-right corner */}
       <div className="hidden md:block fixed top-14 right-24 z-20">
         <Link

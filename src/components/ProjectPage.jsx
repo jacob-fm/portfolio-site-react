@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import AnimatedBackground from "./AnimatedBackground";
-
 export default function ProjectPage({ title, children }) {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -9,7 +7,6 @@ export default function ProjectPage({ title, children }) {
 
   return (
     <div className="project-page max-w-200 mx-auto">
-      <AnimatedBackground mode="blue" />
       <h1 className="text-2xl text-center mt-6">{title}</h1>
       <hr className="m-6"></hr>
       <div className="space-y-4">{children}</div>

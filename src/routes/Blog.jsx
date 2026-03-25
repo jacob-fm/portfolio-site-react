@@ -36,19 +36,31 @@ export default function Blog() {
         {allTags.length > 0 && (
           <>
             <span className="text-stone-400">|</span>
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={`text-sm py-1 px-3 border border-primary rounded-lg cursor-pointer transition-colors ${
-                  activeTag === tag
+            {allTags.length > 5 ? (
+              <select
+                value={activeTag || ""}
+                onChange={(e) => setActiveTag(e.target.value || null)}
+                className="text-sm py-1 px-3 border border-primary rounded-lg text-primary bg-bg cursor-pointer"
+              >
+                <option value="">All tags</option>
+                {allTags.map((tag) => (
+                  <option key={tag} value={tag}>{tag}</option>
+                ))}
+              </select>
+            ) : (
+              allTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                  className={`text-sm py-1 px-3 border border-primary rounded-lg cursor-pointer transition-colors ${activeTag === tag
                     ? "bg-primary text-white"
                     : "text-primary hover:text-pink-500 hover:border-pink-500"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
+                    }`}
+                >
+                  {tag}
+                </button>
+              ))
+            )}
           </>
         )}
       </div>
@@ -76,7 +88,7 @@ export default function Blog() {
                 <p className="text-primary-dark mt-2">{post.description}</p>
               )}
               {post.tags.length > 0 && (
-                <div className="flex gap-2 mt-3">
+                <div className="flex gap-2 mt-3 flex-wrap">
                   {post.tags.map((tag) => (
                     <span
                       key={tag}

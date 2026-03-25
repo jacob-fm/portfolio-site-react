@@ -1,3 +1,5 @@
+import blogMetadata from "virtual:blog-metadata";
+
 const modules = import.meta.glob("/src/content/blog/*.md", {
   eager: true,
   query: "?raw",
@@ -52,15 +54,39 @@ function parseFrontmatter(raw) {
 }
 
 function parsePosts() {
-  return Object.values(modules).map((raw) => {
+  const seenSlugs = new Set();
+
+  return Object.entries(modules).map(([filePath, raw]) => {
     const { data, content } = parseFrontmatter(raw);
+
+    const fileName = filePath.split("/").pop().replace(/\.md$/, "");
+
+    const title = data.title || fileName;
+
+    const date =
+      data.date ||
+      blogMetadata[filePath]?.birthtime?.slice(0, 10) ||
+      new Date().toISOString().slice(0, 10);
+
+    let slug;
+    if (data.slug) {
+      slug = data.slug;
+    } else {
+      const base = fileName.toLowerCase().replace(/\s+/g, "-");
+      slug = base;
+      let counter = 2;
+      while (seenSlugs.has(slug)) {
+        slug = `${base}-${counter}`;
+        counter++;
+      }
+    }
+    seenSlugs.add(slug);
+
     return {
-      slug: data.slug,
-      title: data.title,
-      date: data.date,
-      tags: (data.tags || []).filter(
-        (t) => t.toLowerCase() !== "blog"
-      ),
+      slug,
+      title,
+      date,
+      tags: (data.tags || []).filter((t) => t.toLowerCase() !== "blog"),
       description: data.description || "",
       content,
     };

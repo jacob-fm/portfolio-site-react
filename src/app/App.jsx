@@ -73,20 +73,20 @@ function App() {
       </div>
       <div className="flex w-full justify-center gap-6 mb-8" id="contact-icons">
         <a href="https://www.instagram.com/i.love.kishka/" target="_blank">
-          <i className="fa-brands fa-instagram text-2xl md:text-4xl text-primary"></i>
+          <i className="fa-brands fa-instagram text-2xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
         <a href="https://github.com/jacob-fm" target="_blank">
-          <i className="fa-brands fa-github text-2xl md:text-4xl text-primary"></i>
+          <i className="fa-brands fa-github text-2xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
         <a href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com">
-          <i className="fa-regular fa-envelope text-2xl md:text-4xl text-primary"></i>
+          <i className="fa-regular fa-envelope text-2xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
       </div>
       {/* Mobile: below contact icons */}
       <div className="flex justify-center mb-8 md:hidden">
         <Link
           to="/blog"
-          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700"
+          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
         >
           <i className="fa-solid fa-pen-nib"></i>
           <span>Blog</span>

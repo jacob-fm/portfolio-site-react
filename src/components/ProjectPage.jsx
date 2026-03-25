@@ -9,7 +9,7 @@ export default function ProjectPage({ title, children }) {
     <div className="project-page max-w-200 mx-auto">
       <Link
         to="/"
-        className="fixed top-4 left-4 flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700 bg-bg z-50"
+        className="fixed top-6 left-6 sm:top-8 sm:left-10 flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700 bg-bg z-50"
       >
         <i className="fa-solid fa-arrow-left"></i>
         <span className="hidden sm:inline">Home</span>

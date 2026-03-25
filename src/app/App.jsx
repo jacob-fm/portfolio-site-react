@@ -58,7 +58,7 @@ function App() {
     <div className="relative">
       <AnimatedBackground />
       {/* Desktop: top-right corner */}
-      <div className="hidden md:block fixed top-4 right-4 z-20">
+      <div className="hidden md:block fixed top-14 right-24 z-20">
         <Link
           to="/blog"
           className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700"

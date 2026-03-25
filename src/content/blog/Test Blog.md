@@ -4,8 +4,9 @@ date: 2026-03-24
 tags:
   - BLOG
   - Test
+  - fuzzy
 slug: test-post
-description:
+description: This is a test blog post, to see what happens.
 ---
 
 # Test Blog

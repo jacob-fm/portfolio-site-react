@@ -11,12 +11,24 @@ function parseFrontmatter(raw) {
   const frontmatter = match[1];
   const content = match[2];
   const data = {};
+  let currentKey = null;
 
   for (const line of frontmatter.split("\n")) {
+    // Check for YAML multi-line list item (e.g. "  - value")
+    const listMatch = line.match(/^\s+-\s+(.+)$/);
+    if (listMatch && currentKey) {
+      if (!Array.isArray(data[currentKey])) {
+        data[currentKey] = [];
+      }
+      data[currentKey].push(listMatch[1].trim());
+      continue;
+    }
+
     const colonIdx = line.indexOf(":");
     if (colonIdx === -1) continue;
     const key = line.slice(0, colonIdx).trim();
     let value = line.slice(colonIdx + 1).trim();
+    currentKey = key;
 
     // Parse arrays like ["tag1", "tag2"]
     if (value.startsWith("[") && value.endsWith("]")) {
@@ -25,6 +37,9 @@ function parseFrontmatter(raw) {
         .split(",")
         .map((s) => s.trim().replace(/^["']|["']$/g, ""))
         .filter(Boolean);
+    } else if (value === "") {
+      // Empty value — may be followed by multi-line list items
+      value = "";
     } else {
       // Strip surrounding quotes
       value = value.replace(/^["']|["']$/g, "");
@@ -43,7 +58,9 @@ function parsePosts() {
       slug: data.slug,
       title: data.title,
       date: data.date,
-      tags: data.tags || [],
+      tags: (data.tags || []).filter(
+        (t) => t.toLowerCase() !== "blog"
+      ),
       description: data.description || "",
       content,
     };

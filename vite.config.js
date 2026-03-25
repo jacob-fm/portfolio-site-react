@@ -16,6 +16,9 @@ function blogMetadataPlugin() {
     load(id) {
       if (id === resolvedId) {
         const blogDir = path.resolve("src/content/blog");
+        if (!fs.existsSync(blogDir)) {
+          return `export default {}`;
+        }
         const files = fs.readdirSync(blogDir).filter((f) => f.endsWith(".md"));
         const metadata = {};
         for (const file of files) {

@@ -11,6 +11,8 @@ import GamingTokens from "../routes/GamingTokens.jsx";
 import MiscDesign from "../routes/MiscDesign.jsx";
 import NotFoundPage from "../routes/NotFoundPage.jsx";
 import Nigunim from "../routes/Nigunim.jsx";
+import Blog from "../routes/Blog.jsx";
+import BlogPost from "../routes/BlogPost.jsx";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
   {
     path: "/misc-design",
     element: <MiscDesign />,
+  },
+  {
+    path: "/blog",
+    element: <Blog />,
+  },
+  {
+    path: "/blog/:slug",
+    element: <BlogPost />,
   },
 ]);
 

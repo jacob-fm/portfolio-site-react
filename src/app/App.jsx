@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ThumbnailCard from "../components/ThumbnailCard";
 import AnimatedBackground from "../components/AnimatedBackground";
 import "./style.css";
@@ -54,8 +55,18 @@ function App() {
   ];
 
   return (
-    <>
+    <div className="relative">
       <AnimatedBackground />
+      {/* Desktop: top-right corner */}
+      <div className="hidden md:block fixed top-4 right-4 z-20">
+        <Link
+          to="/blog"
+          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700"
+        >
+          <i className="fa-solid fa-pen-nib"></i>
+          <span>Blog</span>
+        </Link>
+      </div>
       <div id="title-block" className="w-full text-center my-8">
         <h1 className="text-4xl">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
@@ -73,13 +84,23 @@ function App() {
           <i className="fa-regular fa-envelope text-2xl md:text-4xl text-primary"></i>
         </a>
       </div>
+      {/* Mobile: below contact icons */}
+      <div className="flex justify-center mb-8 md:hidden">
+        <Link
+          to="/blog"
+          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700"
+        >
+          <i className="fa-solid fa-pen-nib"></i>
+          <span>Blog</span>
+        </Link>
+      </div>
       <div className="flex flex-col gap-7 mx-auto max-w-160">
         {thumbnails.map((t, idx) => (
           <ThumbnailCard {...t} key={idx} />
         ))}
       </div>
       {/* <script type="module" src="/src/main.js"></script> */}
-    </>
+    </div>
   );
 }
 

@@ -47,7 +47,7 @@ export default function BlogPost() {
               key={tag}
               className="text-sm px-2 py-0.5 border border-primary rounded-lg text-primary"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>

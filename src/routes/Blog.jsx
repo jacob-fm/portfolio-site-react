@@ -44,7 +44,7 @@ export default function Blog() {
               >
                 <option value="">All tags</option>
                 {allTags.map((tag) => (
-                  <option key={tag} value={tag}>{tag}</option>
+                  <option key={tag} value={tag}>#{tag}</option>
                 ))}
               </select>
             ) : (
@@ -57,7 +57,7 @@ export default function Blog() {
                     : "text-primary hover:text-pink-500 hover:border-pink-500"
                     }`}
                 >
-                  {tag}
+                  #{tag}
                 </button>
               ))
             )}
@@ -94,7 +94,7 @@ export default function Blog() {
                       key={tag}
                       className="text-sm px-2 py-0.5 border border-primary rounded-lg text-primary"
                     >
-                      {tag}
+                      #{tag}
                     </span>
                   ))}
                 </div>

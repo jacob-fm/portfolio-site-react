@@ -26,7 +26,7 @@ export default function Blog() {
       <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
         <button
           onClick={() => setAscending(!ascending)}
-          className="text-sm py-1 px-3 border border-primary rounded-lg text-primary hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700 cursor-pointer"
+          className="text-sm py-1 px-3 border border-primary rounded-lg text-primary hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700 cursor-pointer"
         >
           {ascending ? "Oldest first" : "Newest first"}
         </button>
@@ -52,7 +52,7 @@ export default function Blog() {
                   onClick={() => setActiveTag(activeTag === tag ? null : tag)}
                   className={`text-sm py-1 px-3 border border-primary rounded-lg cursor-pointer transition-colors ${activeTag === tag
                     ? "bg-primary text-white"
-                    : "text-primary hover:text-pink-500 hover:border-pink-500"
+                    : "text-primary hover:text-hover hover:border-hover"
                     }`}
                 >
                   #{tag}
@@ -104,7 +104,7 @@ export default function Blog() {
 
       <Link
         to="/"
-        className="w-min mx-auto flex items-center justify-center mt-8 mb-4 gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700"
+        className="w-min mx-auto flex items-center justify-center mt-8 mb-4 gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
       >
         <i className="fa-solid fa-arrow-left"></i>
         <span>Home</span>

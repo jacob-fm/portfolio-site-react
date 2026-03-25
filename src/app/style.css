@@ -7,6 +7,7 @@
   --color-bg-dark: #ebe9e1;
   --color-primary: #b04b6c;
   --color-primary-dark: #993f5a;
+  --color-hover: #e24798;
 }
 
 @layer base {

@@ -59,7 +59,7 @@ function App() {
       <div className="hidden md:block fixed top-14 right-24 z-20">
         <Link
           to="/blog"
-          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-pink-500 hover:border-pink-500 active:text-blue-700 active:border-blue-700"
+          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
         >
           <i className="fa-solid fa-pen-nib"></i>
           <span>Blog</span>

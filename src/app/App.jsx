@@ -8,6 +8,12 @@ function App() {
 
   const thumbnails = [
     {
+      title: "Point Cloud Parties",
+      route: "/pointcloud",
+      image: "/media/pointcloud/pink_wall.jpg",
+      badges: ["Interactive", "TouchDesigner", "Live Events"],
+    },
+    {
       title: "BopMatch",
       route: "/bopmatch",
       image: "/media/bopmatch/bopmatch_thumbnail.png",
@@ -73,7 +79,7 @@ function App() {
       <div id="title-block" className="w-full text-center my-8">
         <h1 className="text-4xl">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
-          Software Engineer & Artist
+          Creative Technologist
         </h2>
       </div>
       <div className="flex w-full justify-center gap-6 mb-8" id="contact-icons">

@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import PointCloudParties from "../routes/projects/PointCloudParties.jsx";
 import Bopmatch from "../routes/projects/Bopmatch.jsx";
 import MIDI from "../routes/projects/MIDI.jsx";
 import AlienEgg from "../routes/projects/AlienEgg.jsx";
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     element: <App />,
     // TODO: better 404 page
     errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/pointcloud",
+    element: <PointCloudParties />,
   },
   {
     path: "/bopmatch",

@@ -2,6 +2,7 @@ import LinkButton from "../../components/LinkButton";
 import ProjectPage from "../../components/ProjectPage";
 
 export default function Avid() {
+  // TODO: put my work at the top!
   return (
     <ProjectPage title="AVID Fitness Website and Branding">
       <p>
@@ -24,9 +25,7 @@ export default function Avid() {
             alt="Old AVID Fitness logo"
             loading="lazy"
           />
-          <figcaption>
-            Old logo
-          </figcaption>
+          <figcaption>Old logo</figcaption>
         </figure>
         <figure>
           <img
@@ -34,9 +33,7 @@ export default function Avid() {
             alt="New AVID Fitness logo, white on blue background"
             loading="lazy"
           />
-          <figcaption>
-            New logo
-          </figcaption>
+          <figcaption>New logo</figcaption>
         </figure>
       </div>
       <figure>

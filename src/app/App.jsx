@@ -11,7 +11,7 @@ function App() {
       title: "Point Cloud Parties",
       route: "/pointcloud",
       image: "/media/pointcloud/pink_wall.jpg",
-      badges: ["Interactive", "TouchDesigner", "Live Events"],
+      badges: ["Interactive", "TouchDesigner", "Live Events", "Resolume"],
     },
     {
       title: "BopMatch",

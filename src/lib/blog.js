@@ -94,7 +94,7 @@ function parsePosts() {
 }
 
 export function getAllPosts(ascending = false) {
-  const posts = parsePosts();
+  const posts = parsePosts().filter((p) => !p.tags.includes("hidden"));
   posts.sort((a, b) => {
     const diff = new Date(b.date) - new Date(a.date);
     return ascending ? -diff : diff;

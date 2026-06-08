@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import ThumbnailCard from "../components/ThumbnailCard";
+import { getAllPosts } from "../lib/blog";
 import "./style.css";
 
 function App() {
+  const hasBlogPosts = getAllPosts().length > 0;
+
   const thumbnails = [
     {
       title: "BopMatch",
@@ -56,15 +59,17 @@ function App() {
   return (
     <div className="relative">
       {/* Desktop: top-right corner */}
-      <div className="hidden md:block fixed top-14 right-24 z-20">
-        <Link
-          to="/blog"
-          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
-        >
-          <i className="fa-solid fa-pen-nib"></i>
-          <span>Blog</span>
-        </Link>
-      </div>
+      {hasBlogPosts && (
+        <div className="hidden md:block fixed top-14 right-24 z-20">
+          <Link
+            to="/blog"
+            className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
+          >
+            <i className="fa-solid fa-pen-nib"></i>
+            <span>Blog</span>
+          </Link>
+        </div>
+      )}
       <div id="title-block" className="w-full text-center my-8">
         <h1 className="text-4xl">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
@@ -83,15 +88,17 @@ function App() {
         </a>
       </div>
       {/* Mobile: below contact icons */}
-      <div className="flex justify-center mb-8 md:hidden">
-        <Link
-          to="/blog"
-          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
-        >
-          <i className="fa-solid fa-pen-nib"></i>
-          <span>Blog</span>
-        </Link>
-      </div>
+      {hasBlogPosts && (
+        <div className="flex justify-center mb-8 md:hidden">
+          <Link
+            to="/blog"
+            className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
+          >
+            <i className="fa-solid fa-pen-nib"></i>
+            <span>Blog</span>
+          </Link>
+        </div>
+      )}
       <div className="flex flex-col gap-7 mx-auto max-w-160">
         {thumbnails.map((t, idx) => (
           <ThumbnailCard {...t} key={idx} />

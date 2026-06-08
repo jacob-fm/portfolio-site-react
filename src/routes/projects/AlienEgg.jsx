@@ -2,7 +2,7 @@ import ProjectPage from "../../components/ProjectPage";
 import LinkButton from "../../components/LinkButton";
 export default function AlienEgg() {
   return (
-    <ProjectPage title='"Alien Egg" Sculpture'>
+    <ProjectPage title="Alien Egg">
       <LinkButton route="https://github.com/material-kish/arduino_gold">
         <i className="fa-brands fa-github"></i>Github Repo
       </LinkButton>

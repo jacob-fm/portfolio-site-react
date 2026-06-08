@@ -20,7 +20,7 @@ function App() {
       badges: ["JavaScript", "React", "Supabase", "Vite", "Netlify"],
     },
     {
-      title: '"Alien Egg" Sculpture',
+      title: "Alien Egg",
       route: "alien-egg",
       image: "/media/alien_egg/brain_rock_thumbnail.png",
       badges: ["Interactive", "Arduino", "Sculpture"],
@@ -41,24 +41,25 @@ function App() {
       title: "Yale Collections: Gaming Tokens",
       route: "/tokens",
       image: "/media/gaming_counters/gaming_counters_thumbnail.png",
-      badges: ["Branding", "Poster Design"],
+      badges: ["Brand Design", "Poster Design"],
     },
     {
       title: "AVID Fitness",
       route: "/avid",
       image: "/media/avid/avid_thumbnail.jpg",
-      badges: ["Branding", "Logo Design", "WordPress"],
+      badges: ["Brand Design", "WordPress"],
     },
     {
       title: "Amoriem Labs",
       route: "/amoriem",
       image: "/media/amoriem/amoriem_thumbnail.jpg",
-      badges: ["Branding", "Logo Design"],
+      badges: ["Brand Design", "Logo Design"],
     },
     {
       title: "Miscellaneous Design Work",
       route: "/misc-design",
       image: "/media/misc_thumbnail.png",
+      badges: ["Brand Design"],
     },
   ];
 

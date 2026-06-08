@@ -83,7 +83,7 @@ function App() {
         </h2>
       </div>
       <div className="flex w-full justify-center gap-6 mb-8" id="contact-icons">
-        <a href="https://www.instagram.com/i.love.kishka/" target="_blank">
+        <a href="https://www.instagram.com/jacob.feit.mann/" target="_blank">
           <i className="fa-brands fa-instagram text-2xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
         <a href="https://github.com/jacob-fm" target="_blank">

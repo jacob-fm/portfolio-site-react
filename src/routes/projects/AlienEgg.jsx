@@ -1,5 +1,5 @@
-import ProjectPage from "../components/ProjectPage";
-import LinkButton from "../components/LinkButton";
+import ProjectPage from "../../components/ProjectPage";
+import LinkButton from "../../components/LinkButton";
 export default function AlienEgg() {
   return (
     <ProjectPage title='"Alien Egg" Sculpture'>

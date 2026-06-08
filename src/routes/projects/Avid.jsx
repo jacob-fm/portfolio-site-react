@@ -1,5 +1,5 @@
-import LinkButton from "../components/LinkButton";
-import ProjectPage from "../components/ProjectPage";
+import LinkButton from "../../components/LinkButton";
+import ProjectPage from "../../components/ProjectPage";
 
 export default function Avid() {
   return (

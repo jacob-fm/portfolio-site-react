@@ -23,16 +23,18 @@ export default function Amoriem() {
         abstractly) a skull with a heart on the forehead - a nod to the
         etymology of the group’s name.
       </p>
-      <div>
+      <div className="flex flex-col items-center">
         <img
           src="/media/amoriem/logo_landscape_icon.png"
           alt="Amoriem logo with icon in landscape orientation"
           loading="lazy"
+          className="h-40"
         />
         <img
           src="/media/amoriem/logo_portrait_icon.png"
           alt="Amoriem logo with icon in portrait orientation"
           loading="lazy"
+          className="h-40"
         />
       </div>
       <p>

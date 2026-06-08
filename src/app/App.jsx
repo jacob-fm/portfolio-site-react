@@ -86,13 +86,13 @@ function App() {
       </div>
       <div className="flex w-full justify-center gap-6 mb-8" id="contact-icons">
         <a href="https://www.instagram.com/jacob.feit.mann/" target="_blank">
-          <i className="fa-brands fa-instagram text-2xl md:text-4xl text-primary hover:text-hover"></i>
+          <i className="fa-brands fa-instagram text-3xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
         <a href="https://github.com/jacob-fm" target="_blank">
-          <i className="fa-brands fa-github text-2xl md:text-4xl text-primary hover:text-hover"></i>
+          <i className="fa-brands fa-github text-3xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
         <a href="mailto:ja%63ob%66e%69t%6Dann@gm%61%69l.com">
-          <i className="fa-regular fa-envelope text-2xl md:text-4xl text-primary hover:text-hover"></i>
+          <i className="fa-regular fa-envelope text-3xl md:text-4xl text-primary hover:text-hover"></i>
         </a>
       </div>
       {/* Mobile: below contact icons */}
@@ -107,7 +107,7 @@ function App() {
           </Link>
         </div>
       )}
-      <div className=" mx-auto w-full lg:p-6 mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
+      <div className=" mx-auto w-full pt-4 lg:p-6 md:mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
         <h3 className="text-3xl font-heading text-center text-stone-600 top-0 left-0 right-0 ">
           Recent Work
         </h3>

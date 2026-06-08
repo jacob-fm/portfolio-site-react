@@ -108,7 +108,7 @@ function App() {
         </div>
       )}
       <div className=" mx-auto max-w-300 p-6 mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
-        <h3 className="text-3xl font-heading text-center top-0 left-0 right-0 ">
+        <h3 className="text-3xl font-heading text-center text-stone-600 top-0 left-0 right-0 ">
           Recent Work
         </h3>
         <Link to={featured.route}>

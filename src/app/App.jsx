@@ -107,11 +107,13 @@ function App() {
           </Link>
         </div>
       )}
-      <div className="mx-auto max-w-300 px-4 mb-10">
-        <h3 className="text-stone-500 mb-3">Recent Work</h3>
+      <div className=" mx-auto max-w-300 p-6 mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
+        <h3 className="text-3xl font-heading text-center top-0 left-0 right-0 ">
+          Recent Work
+        </h3>
         <Link to={featured.route}>
           <div className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col md:flex-row">
-            <div className="md:w-2/3 h-64 md:h-80">
+            <div className="md:w-2/3 h-64 md:h-120">
               <img
                 src={featured.image}
                 className="object-cover h-full w-full"

@@ -14,7 +14,7 @@ export default function PointCloudParties() {
   return (
     <ProjectPage title="Point Cloud Parties">
       {/* use first image as hero sorta thing */}
-      <div className="object-fill h-120 overflow-hidden ">
+      <div className="object-fill md:h-120 overflow-hidden ">
         <img src={images[0]} />
       </div>
       {/* description */}

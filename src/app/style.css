@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: Work Sans, sans-serif;
+  --font-sans: Geist, sans-serif;
+  --font-serif: Antic Didone, serif;
+  --font-heading: Caudex, sans-serif;
 
   --color-bg: #fffef7;
   --color-bg-dark: #ebe9e1;

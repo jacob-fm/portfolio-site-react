@@ -38,7 +38,7 @@ function App() {
       badges: ["SuperCollider"],
     },
     {
-      title: "Yale Collections: 18th Century Chinese Gaming Tokens",
+      title: "Yale Collections: Gaming Tokens",
       route: "/tokens",
       image: "/media/gaming_counters/gaming_counters_thumbnail.png",
       badges: ["Branding", "Poster Design"],
@@ -77,7 +77,7 @@ function App() {
         </div>
       )}
       <div id="title-block" className="w-full text-center my-8">
-        <h1 className="text-4xl">Jacob Feit Mann</h1>
+        <h1 className="text-5xl mb-1 font-heading">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
           Creative Technologist
         </h2>

@@ -8,7 +8,7 @@ export default function ThumbnailCard({ title, route, image, badges }) {
           <img src={image} className="object-cover h-full w-full" />
         </div>
         <div className="flex flex-col bg-bg text-primary">
-          <h2 className="text-center text-lg my-1">{title}</h2>
+          <h2 className="text-center text-xl my-1 font-heading">{title}</h2>
           <div className="flex space-x-1.5 justify-center">
             {badges?.map((b, idx) => (
               <span

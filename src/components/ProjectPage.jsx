@@ -14,7 +14,7 @@ export default function ProjectPage({ title, children }) {
         <i className="fa-solid fa-arrow-left"></i>
         <span className="hidden sm:inline">Home</span>
       </Link>
-      <h1 className="text-2xl text-center mt-6">{title}</h1>
+      <h1 className="text-4xl text-center mt-12 font-heading">{title}</h1>
       <hr className="m-6"></hr>
       <div className="space-y-4">{children}</div>
     </div>

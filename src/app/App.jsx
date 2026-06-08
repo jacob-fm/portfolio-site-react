@@ -62,6 +62,8 @@ function App() {
     },
   ];
 
+  const [featured, ...rest] = thumbnails;
+
   return (
     <div className="relative">
       {/* Desktop: top-right corner */}
@@ -105,11 +107,37 @@ function App() {
           </Link>
         </div>
       )}
+      <div className="mx-auto max-w-300 px-4 mb-10">
+        <h3 className="text-stone-500 mb-3">Recent Work</h3>
+        <Link to={featured.route}>
+          <div className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col md:flex-row">
+            <div className="md:w-2/3 h-64 md:h-80">
+              <img
+                src={featured.image}
+                className="object-cover h-full w-full"
+              />
+            </div>
+            <div className="md:w-1/3 flex flex-col items-center justify-center bg-bg text-primary p-6">
+              <h2 className="text-2xl font-heading mb-3">{featured.title}</h2>
+              <div className="flex flex-wrap gap-1.5">
+                {featured.badges?.map((b, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs px-1 border border-primary rounded-lg"
+                  >
+                    {b}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
       <div
         className="grid gap-7 mx-auto max-w-300 px-4"
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))" }}
       >
-        {thumbnails.map((t, idx) => (
+        {rest.map((t, idx) => (
           <ThumbnailCard {...t} key={idx} />
         ))}
       </div>

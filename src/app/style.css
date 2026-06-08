@@ -14,7 +14,7 @@
 
 @layer base {
   body {
-    @apply min-h-full w-full text-primary bg-bg p-4;
+    @apply min-h-full w-full text-primary bg-bg p-4 font-sans;
   }
   
   a {

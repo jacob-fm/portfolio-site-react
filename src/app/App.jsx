@@ -23,7 +23,7 @@ function App() {
       title: '"Alien Egg" Sculpture',
       route: "alien-egg",
       image: "/media/alien_egg/brain_rock_thumbnail.png",
-      badges: ["Arduino", "Sculpture"],
+      badges: ["Interactive", "Arduino", "Sculpture"],
     },
     {
       title: '"Nigunim"',
@@ -65,7 +65,7 @@ function App() {
   const [featured, ...rest] = thumbnails;
 
   return (
-    <div className="relative">
+    <div className="relative md:px-50">
       {/* Desktop: top-right corner */}
       {hasBlogPosts && (
         <div className="hidden md:block fixed top-14 right-24 z-20">
@@ -107,19 +107,19 @@ function App() {
           </Link>
         </div>
       )}
-      <div className=" mx-auto max-w-300 p-6 mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
+      <div className=" mx-auto w-full lg:p-6 mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
         <h3 className="text-3xl font-heading text-center text-stone-600 top-0 left-0 right-0 ">
           Recent Work
         </h3>
         <Link to={featured.route}>
-          <div className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col md:flex-row">
-            <div className="md:w-2/3 h-64 md:h-120">
+          <div className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col lg:flex-row">
+            <div className="lg:w-2/3 h-64 lg:h-120">
               <img
                 src={featured.image}
                 className="object-cover h-full w-full"
               />
             </div>
-            <div className="md:w-1/3 flex flex-col items-center justify-center bg-bg text-primary p-6">
+            <div className="lg:w-1/3 flex flex-col items-center justify-center bg-bg text-primary p-6">
               <h2 className="text-2xl font-heading mb-3">{featured.title}</h2>
               <div className="flex flex-wrap gap-1.5">
                 {featured.badges?.map((b, idx) => (
@@ -136,7 +136,7 @@ function App() {
         </Link>
       </div>
       <div
-        className="grid gap-7 mx-auto max-w-300 px-4"
+        className="grid gap-7 mx-auto "
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))" }}
       >
         {rest.map((t, idx) => (

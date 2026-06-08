@@ -35,7 +35,7 @@ function App() {
       title: "MIDI Signal Augmenter",
       route: "/midi",
       image: "/media/midi_thumbnail.png",
-      badges: ["SuperCollider"],
+      badges: ["SuperCollider", "Music"],
     },
     {
       title: "Yale Collections: Gaming Tokens",

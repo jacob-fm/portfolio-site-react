@@ -37,18 +37,18 @@ function App() {
       image: "/media/gaming_counters/gaming_counters_thumbnail.png",
       badges: ["Branding", "Poster Design"],
     },
-    // {
-    //   title: "AVID Fitness",
-    //   route: "/avid",
-    //   image: "/media/avid/avid_thumbnail.jpg",
-    //   badges: ["Branding", "Logo Design", "WordPress"],
-    // },
-    // {
-    //   title: "Amoriem Labs",
-    //   route: "/amoriem",
-    //   image: "/media/amoriem/amoriem_thumbnail.jpg",
-    //   badges: ["Branding", "Logo Design"],
-    // },
+    {
+      title: "AVID Fitness",
+      route: "/avid",
+      image: "/media/avid/avid_thumbnail.jpg",
+      badges: ["Branding", "Logo Design", "WordPress"],
+    },
+    {
+      title: "Amoriem Labs",
+      route: "/amoriem",
+      image: "/media/amoriem/amoriem_thumbnail.jpg",
+      badges: ["Branding", "Logo Design"],
+    },
     {
       title: "Miscellaneous Design Work",
       route: "/misc-design",
@@ -99,7 +99,10 @@ function App() {
           </Link>
         </div>
       )}
-      <div className="flex flex-col gap-7 mx-auto max-w-160">
+      <div
+        className="grid gap-7 mx-auto max-w-300 px-4"
+        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))" }}
+      >
         {thumbnails.map((t, idx) => (
           <ThumbnailCard {...t} key={idx} />
         ))}

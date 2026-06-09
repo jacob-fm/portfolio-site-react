@@ -46,7 +46,7 @@ function App() {
     {
       title: "AVID Fitness",
       route: "/avid",
-      image: "/media/avid/avid_thumbnail.jpg",
+      image: "/media/avid/avid_thumbnail.png",
       badges: ["Brand Design", "WordPress"],
     },
     {

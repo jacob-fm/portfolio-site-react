@@ -5,7 +5,7 @@ const images = [
   "icon.png",
   "classes_screenshot.jpg",
   "contact_screenshot.jpg",
-  "avid_thumbnail.jpg",
+  "avid_thumbnail.png",
   "profile_pic_2.png",
   "story1.png",
   "story3.png",

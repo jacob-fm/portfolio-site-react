@@ -1,83 +1,37 @@
 import LinkButton from "../../components/LinkButton";
 import ProjectPage from "../../components/ProjectPage";
 
+const images = [
+  "icon.png",
+  "classes_screenshot.jpg",
+  "contact_screenshot.jpg",
+  "avid_thumbnail.jpg",
+  "profile_pic_2.png",
+  "story1.png",
+  "story3.png",
+  "color.png",
+  "homepage_screenshot.jpg",
+  "blue_on_white.jpg",
+  "post4.png",
+  "post2.png",
+  "post1.png",
+];
+
 export default function Avid() {
-  // TODO: put my work at the top!
   return (
-    <ProjectPage title="AVID Fitness Website and Branding">
+    <ProjectPage title="AVID Fitness">
       <p>
-        AVID's greatest asset was its strong sense of community, so while we
-        experimented with some pretty "out-there" ideas for the rebrand, the
-        owner, Avi, and I decided on a new logo that kept some attributes of the
-        old one, but with a more energetic and sleeker feeling.
+        Brand identity, social media assets, and web design for a local gym.
       </p>
-      <h2>Logo and Branding</h2>
-      <p>
-        AVID's greatest asset is its strong sense of community, so while we
-        experimented with some pretty "out-there" ideas for the rebrand, the
-        owner, Avi, and I decided on a new logo that kept some attributes of the
-        old one, but with a more energetic and sleeker feeling.
-      </p>
-      <div className="my-4 space-y-4">
-        <figure className="flex flex-col justify-center">
+
+      <div className="mt-6 mx-auto columns-[360px] gap-4">
+        {images.map((image) => (
           <img
-            src="/media/avid/old_avid_logo.jpeg"
-            alt="Old AVID Fitness logo"
-            loading="lazy"
+            src={`/media/avid/${image}`}
+            key={image}
+            className="w-full mb-4 break-inside-avoid"
           />
-          <figcaption>Old logo</figcaption>
-        </figure>
-        <figure>
-          <img
-            src="/media/avid/blue_on_white.jpg"
-            alt="New AVID Fitness logo, white on blue background"
-            loading="lazy"
-          />
-          <figcaption>New logo</figcaption>
-        </figure>
-      </div>
-      <figure>
-        <div className="space-y-2">
-          <img src="/media/avid/profile_pic_2.png" loading="lazy" />
-          <img src="/media/avid/post1.png" loading="lazy" />
-          <img src="/media/avid/story1.png" loading="lazy" />
-          <img src="/media/avid/post4.png" loading="lazy" />
-          <img src="/media/avid/multi-image.png" loading="lazy" />
-          <img src="/media/avid/post2.png" loading="lazy" />
-        </div>
-      </figure>
-      <h2 className="mt-8">Website</h2>
-      <LinkButton route="https://avidstrong.com">
-        <i className="fa-solid fa-globe"></i>AVID Website
-      </LinkButton>
-      <p>
-        I built AVID’s website with WordPress, using a theme called GoFiz. I
-        customized the theme to fit the branding we had created in the first
-        step, keeping in mind the themes of community, energy, and motivation
-        which were core to the business.
-      </p>
-      <p>
-        AVID uses a software called MindBody which takes care of tracking
-        customer information: class enrollments, payment info, etc. I customized
-        MindBody’s web widgets to match the brand, and embedded them the HTML of
-        the site.
-      </p>
-      <div>
-        <img
-          src="/media/avid/homepage_screenshot.jpg"
-          alt="AVID Homepage"
-          loading="lazy"
-        />
-        <img
-          src="/media/avid/contact_screenshot.jpg"
-          alt="AVID Contact Form"
-          loading="lazy"
-        />
-        <img
-          src="/media/avid/classes_screenshot.jpg"
-          alt="AVID CLasses Widget using MindBody"
-          loading="lazy"
-        />
+        ))}
       </div>
     </ProjectPage>
   );

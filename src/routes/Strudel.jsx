@@ -11,8 +11,10 @@ export default function Strudel() {
         <a href="https://strudel.cc/workshop/getting-started/" target="_blank">
           Strudel
         </a>
-        .
+        . You can mess around with the code and press "update" to hear your
+        changes.
       </p>
+      <p>At time of writing, this doesn't work on mobile.</p>
       <div className="grid grid-col w-full gap-2">
         {songURLs.map((song) => (
           <iframe

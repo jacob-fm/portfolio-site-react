@@ -24,7 +24,7 @@ export default function Strudel() {
       <div className="grid grid-col w-full gap-2">
         {songs.map((song, i) => (
           <details key={song.url} className="border border-primary">
-            <summary className="cursor-pointer px-3 py-2 font-heading select-none">
+            <summary className="cursor-pointer text-xl px-3 py-2 font-heading select-none">
               {song.title ?? `Composition ${i + 1}`}
             </summary>
             <iframe className="w-full min-h-70 h-140" src={song.url}></iframe>

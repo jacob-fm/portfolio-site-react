@@ -3,7 +3,7 @@ export default function Strudel() {
   const songs = [
     {
       title: "Ocarina Beat",
-      url: "https://strudel.cc/#Ly8gQHRpdGxlIE9jYXJpbmEgQmVhdAovLyBAYnkgSmFjb2IgRmVpdCBNYW5uCgoKY29uc3Qgb2NhcmluYSA9ICBuKCI8MiBbLSAxXSAtIFs8MyAtID4gIDw0IDUgNj5dID4qNCIuYWRkKDApKS5zY2FsZSgiRjptYWpvciIpLnNvdW5kKCJvY2FyaW5hIikKICAuYWRzcigiLjA1Oi40Oi43Oi42IikKICAucm9vbSgwLjMpLmRlbGF5KCIwLjg6MC42OjAuNiIpCmNvbnN0IGd1aXRhciA9ICBuKCI8MiBbLSAxXSAtIFs8MyAtID4gIDw0IDUgNj5dID4qNCIuYWRkKDApKS5zY2FsZSgiRjptYWpvciIpLnNvdW5kKCJnbV9lbGVjdHJpY19ndWl0YXJfamF6ejo4IikKICAuYXR0YWNrKDAuMDUpLmRlY2F5KDAuMSkuc3VzdGFpbigwLjMpLnJlbGVhc2UoMC42KQogIC5oYXJkKCI0Oi4wNiIpCiAgLnJvb20oIjAuNzo0IikuZGVsYXkoIjAuNDowLjQ6MC4yIikKY29uc3QgcmVlc2UgPSBub3RlKCI8W2YxIGExXSBbYzFAMyBlMV0%2BLzIiKS5zb3VuZCgiZ21fc3ludGhfYnJhc3NfMSIpCmNvbnN0IGtpY2tTbmFyZSA9IHMoIjxiZCBzZD4qMiIpLmJhbmsoImJvc3NkcjExMCIpLnJvb20oIjAuMjowLjMiKQpjb25zdCBoYXRzID0gcygiaGgqMiBbaGggaGggaGhdIGhoKjIgPGhoIFtoaCBbaGggaGhdXT4iKS5iYW5rKCJib3NzZHIxMTAiKS5nYWluKDAuMikucm9vbSgiMC4xOjAuMSIpCmNvbnN0IHJpbSA9IHMoIi0gLSA8IC0gcmltID4iKS5iYW5rKCJhbGVzaXNzcjE2IikuZ2FpbigwLjQpCmNvbnN0IGRydW1zID0gc3RhY2soa2lja1NuYXJlLCBoYXRzLCByaW0pCgokOiBzdGFjaygKICBhcnJhbmdlKFsxNiwgb2NhcmluYV0pLAogIGFycmFuZ2UoWzgsIHNpbGVuY2VdLCBbOCwgcmVlc2VdKSwKICBhcnJhbmdlKFs4LCBzaWxlbmNlXSwgWzgsIGRydW1zXSwgWzQsIHNpbGVuY2VdLCBbMTIsIGtpY2tTbmFyZV0pLAogIGFycmFuZ2UoWzQsIHNpbGVuY2VdLCBbNCwgZ3VpdGFyXSksCikuX3BpYW5vcm9sbCgp",
+      url: "https://strudel.cc/#Ly8gQHRpdGxlIE9jYXJpbmEgQmVhdAovLyBAYnkgSmFjb2IgRmVpdCBNYW5uCgoKY29uc3Qgb2NhcmluYSA9ICBuKCI8MiBbLSAxXSAtIFs8MyAtID4gIDw0IDUgNj5dID4qNCIuYWRkKDApKS5zY2FsZSgiRjptYWpvciIpLnNvdW5kKCJvY2FyaW5hIikuY29sb3IoInllbGxvdyIpCiAgLmFkc3IoIi4wNTouNDouNzouNiIpCiAgLnJvb20oMC4zKS5kZWxheSgiMC44OjAuNjowLjYiKQpjb25zdCBndWl0YXIgPSAgbigiPDIgWy0gMV0gLSBbPDMgLSA%2BICA8NCA1IDY%2BXSA%2BKjQiLmFkZCgwKSkuc2NhbGUoIkY6bWFqb3IiKS5zb3VuZCgiZ21fZWxlY3RyaWNfZ3VpdGFyX2pheno6OCIpLmNvbG9yKCJwaW5rIikKICAuYXR0YWNrKDAuMDUpLmRlY2F5KDAuMSkuc3VzdGFpbigwLjMpLnJlbGVhc2UoMC42KQogIC5oYXJkKCI0Oi4wNiIpCiAgLnJvb20oIjAuNzo0IikuZGVsYXkoIjAuNDowLjQ6MC4yIikKY29uc3QgcmVlc2UgPSBub3RlKCI8W2YxIGExXSBbYzFAMyBlMV0%2BLzIiKS5zb3VuZCgiZ21fc3ludGhfYnJhc3NfMSIpLmNvbG9yKCJ0ZWFsIikKY29uc3Qga2lja1NuYXJlID0gcygiPGJkIHNkPioyIikuYmFuaygiYm9zc2RyMTEwIikucm9vbSgiMC4yOjAuMyIpLmNvbG9yKCJibHVlIikKY29uc3QgaGF0cyA9IHMoImhoKjIgW2hoIGhoIGhoXSBoaCoyIDxoaCBbaGggW2hoIGhoXV0%2BIikuYmFuaygiYm9zc2RyMTEwIikuZ2FpbigwLjIpLnJvb20oIjAuMTowLjEiKS5jb2xvcigiYmx1ZSIpCmNvbnN0IHJpbSA9IHMoIi0gLSA8IC0gcmltID4iKS5iYW5rKCJhbGVzaXNzcjE2IikuZ2FpbigwLjQpLmNvbG9yKCJibHVlIikKY29uc3QgZHJ1bXMgPSBzdGFjayhraWNrU25hcmUsIGhhdHMsIHJpbSkKCiQ6IHN0YWNrKAogIGFycmFuZ2UoWzE2LCBvY2FyaW5hXSksCiAgYXJyYW5nZShbOCwgc2lsZW5jZV0sIFs4LCByZWVzZV0pLAogIGFycmFuZ2UoWzgsIHNpbGVuY2VdLCBbOCwgZHJ1bXNdLCBbNCwgc2lsZW5jZV0sIFsxMiwga2lja1NuYXJlXSksCiAgYXJyYW5nZShbNCwgc2lsZW5jZV0sIFs0LCBndWl0YXJdKSwKKS5waWFub3JvbGwoe2xhYmVsczogMX0p",
     },
     {
       title: "A Moody Song",
@@ -18,13 +18,16 @@ export default function Strudel() {
           Strudel
         </a>
         . You can mess around with the code and press "update" to hear your
-        changes.
+        changes. When a song is focused,{" "}
+        <span className="bg-bg-dark p-1">ctrl + enter</span> = play/update and{" "}
+        <span className="bg-bg-dark p-1">ctrl + .</span> = stop (even on Mac,
+        it's ctrl, not cmd).
       </p>
-      <p>At time of writing, this doesn't work on mobile.</p>
+      <p>At time of writing, the audio won't play on mobile.</p>
       <div className="grid grid-col w-full gap-2">
         {songs.map((song, i) => (
           <details key={song.url} className="border border-primary">
-            <summary className="cursor-pointer text-xl px-3 py-2 font-heading select-none">
+            <summary className="cursor-pointer text-xl px-3 py-2 font-sans select-none">
               {song.title ?? `Composition ${i + 1}`}
             </summary>
             <iframe className="w-full min-h-70 h-140" src={song.url}></iframe>

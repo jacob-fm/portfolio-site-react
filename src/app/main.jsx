@@ -14,6 +14,7 @@ import NotFoundPage from "../routes/NotFoundPage.jsx";
 import Nigunim from "../routes/projects/Nigunim.jsx";
 import Blog from "../routes/Blog.jsx";
 import BlogPost from "../routes/BlogPost.jsx";
+import Strudel from "../routes/Strudel.jsx";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
   {
     path: "/blog/:slug",
     element: <BlogPost />,
+  },
+  {
+    path: "/strudel",
+    element: <Strudel />,
   },
 ]);
 

@@ -41,12 +41,20 @@ function loadLayout() {
       typeof window !== "undefined" ? window.innerWidth - PANEL_WIDTH - 24 : 24,
     y: 96,
     minimized: false,
+    // Which accordion sections are expanded — all open by default.
+    sections: { envelope: true, filter: true },
   };
   if (typeof localStorage === "undefined") return fallback;
   try {
     const raw = localStorage.getItem(LAYOUT_KEY);
     if (!raw) return fallback;
-    return { ...fallback, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw);
+    return {
+      ...fallback,
+      ...parsed,
+      // Merge sections so any newly-added section defaults to open.
+      sections: { ...fallback.sections, ...(parsed.sections || {}) },
+    };
   } catch {
     return fallback;
   }
@@ -140,14 +148,14 @@ function Slider({
 export default function SynthControlPanel() {
   const [settings, update] = useSynthSettings();
   const [layout, setLayout] = useState(loadLayout);
-  const [openSection, setOpenSection] = useState({
-    envelope: true,
-    filter: false,
-  });
   const dragRef = useRef(null);
 
   const toggleSection = (key) =>
-    setOpenSection((s) => ({ ...s, [key]: !s[key] }));
+    setLayout((l) => {
+      const next = { ...l, sections: { ...l.sections, [key]: !l.sections[key] } };
+      saveLayout(next);
+      return next;
+    });
 
   const setMinimized = (minimized) => {
     setLayout((l) => {
@@ -335,7 +343,7 @@ export default function SynthControlPanel() {
             {/* Envelope (ADSR) */}
             <Collapsible
               title="Envelope"
-              open={openSection.envelope}
+              open={layout.sections.envelope}
               onToggle={() => toggleSection("envelope")}
             >
               <Slider
@@ -379,7 +387,7 @@ export default function SynthControlPanel() {
             {/* Filter */}
             <Collapsible
               title="Filter"
-              open={openSection.filter}
+              open={layout.sections.filter}
               onToggle={() => toggleSection("filter")}
             >
               {/* Filter type tabs */}

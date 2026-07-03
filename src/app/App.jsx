@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import ThumbnailCard from "../components/ThumbnailCard";
 import { getAllPosts } from "../lib/blog";
+import { playHoverNote } from "../lib/hoverSound";
+import SynthControlPanel from "../components/SynthControlPanel";
 import "./style.css";
 
 function App() {
@@ -119,7 +121,10 @@ function App() {
           Recent Work
         </h3>
         <Link to={featured.route}>
-          <div className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col lg:flex-row">
+          <div
+            onMouseEnter={() => playHoverNote(0)}
+            className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col lg:flex-row"
+          >
             <div className="lg:w-2/3 h-64 lg:h-120">
               <img
                 src={featured.image}
@@ -147,9 +152,10 @@ function App() {
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))" }}
       >
         {rest.map((t, idx) => (
-          <ThumbnailCard {...t} key={idx} />
+          <ThumbnailCard {...t} index={idx + 1} key={idx} />
         ))}
       </div>
+      <SynthControlPanel />
       {/* <script type="module" src="/src/main.js"></script> */}
     </div>
   );

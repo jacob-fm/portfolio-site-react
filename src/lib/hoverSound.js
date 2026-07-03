@@ -43,7 +43,7 @@ export const SCALES = {
 const DEFAULT_SETTINGS = {
   enabled: false,
   waveType: "triangle",
-  volume: 0.15,
+  volume: 0.3,
   attack: 0.005, // seconds, 0 → peak
   decay: 0.145, // seconds, peak → sustain level
   sustain: 0.0, // 0..1, fraction of volume held
@@ -57,11 +57,14 @@ const DEFAULT_SETTINGS = {
 const SUSTAIN_HOLD = 0.06;
 
 function loadSettings() {
+  // Always start disabled: browsers block audio until a user gesture, and
+  // hovering isn't one. The panel's enable toggle (a click) unlocks it. Other
+  // settings are still restored from localStorage.
   if (typeof localStorage === "undefined") return { ...DEFAULT_SETTINGS };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_SETTINGS };
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw), enabled: false };
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
@@ -82,6 +85,12 @@ export function setSynthSettings(partial) {
       // Ignore quota/serialization errors — persistence is best-effort.
     }
   }
+  // Turning the synth on happens via the panel toggle — a real user gesture —
+  // so unlock/resume the AudioContext now, while we're still inside it.
+  if (partial && partial.enabled) {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === "suspended") ctx.resume().catch(() => {});
+  }
   return { ...settings };
 }
 
@@ -100,13 +109,17 @@ function frequencyForIndex(index) {
   const intervals = SCALES[settings.scale] || SCALES.major;
   const rootOffset = ROOT_NOTES[settings.root] ?? ROOT_NOTES.E;
 
-  const degree = ((index % intervals.length) + intervals.length) % intervals.length;
+  const degree =
+    ((index % intervals.length) + intervals.length) % intervals.length;
   const octave = Math.floor(index / intervals.length);
 
   // Semitones from A4: root position, scale step, octave climb, and how far
   // the chosen base octave sits from octave 4.
   const semitonesFromA4 =
-    rootOffset + intervals[degree] + 12 * octave + 12 * (settings.baseOctave - 4);
+    rootOffset +
+    intervals[degree] +
+    12 * octave +
+    12 * (settings.baseOctave - 4);
 
   return 440 * Math.pow(2, semitonesFromA4 / 12);
 }
@@ -114,6 +127,16 @@ function frequencyForIndex(index) {
 // Plays a short synth note for the given thumbnail index using current settings.
 export function playHoverNote(index = 0) {
   if (!settings.enabled) return;
+
+  // Ignore spurious mouseenter events delivered to the page while it isn't the
+  // focused/visible window (e.g. the OS re-synthesizing a pointer event over a
+  // thumbnail after you've switched to another app).
+  if (
+    typeof document !== "undefined" &&
+    (document.hidden || !document.hasFocus())
+  ) {
+    return;
+  }
 
   const ctx = getAudioContext();
   if (!ctx) return;

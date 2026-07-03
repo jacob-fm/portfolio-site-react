@@ -4,6 +4,9 @@ import { WAVE_TYPES, ROOT_NOTES, SCALES } from "../lib/hoverSound";
 
 const LAYOUT_KEY = "hoverSynthLayout";
 const PANEL_WIDTH = 288; // matches w-72
+// Actual gain cap — kept low so it isn't too loud. Displayed to the user as
+// 100% (the slider shows a percentage of this range, not raw gain).
+const MAX_VOLUME = 0.6;
 
 const SCALE_LABELS = {
   major: "Major",
@@ -15,7 +18,8 @@ const SCALE_LABELS = {
 
 function loadLayout() {
   const fallback = {
-    x: typeof window !== "undefined" ? window.innerWidth - PANEL_WIDTH - 24 : 24,
+    x:
+      typeof window !== "undefined" ? window.innerWidth - PANEL_WIDTH - 24 : 24,
     y: 96,
     minimized: false,
   };
@@ -230,10 +234,10 @@ export default function SynthControlPanel() {
               label="Volume"
               value={settings.volume}
               min={0}
-              max={1}
+              max={MAX_VOLUME}
               step={0.01}
               onChange={(v) => update({ volume: v })}
-              format={(v) => `${Math.round(v * 100)}%`}
+              format={(v) => `${Math.round((v / MAX_VOLUME) * 100)}%`}
             />
 
             {/* ADSR */}

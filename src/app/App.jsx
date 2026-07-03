@@ -14,6 +14,12 @@ function App() {
       badges: ["Interactive", "TouchDesigner", "Live Events", "Resolume"],
     },
     {
+      title: "Umbral",
+      route: "/umbral",
+      image: "/media/umbral/thumbnail.png",
+      badges: ["Web Dev", "React", "TypeScript", "Shopify"],
+    },
+    {
       title: "BopMatch",
       route: "/bopmatch",
       image: "/media/bopmatch/bopmatch_thumbnail.png",

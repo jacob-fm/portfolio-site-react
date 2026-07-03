@@ -1,9 +1,16 @@
 import { useRef, useState } from "react";
 import useSynthSettings from "../hooks/useSynthSettings";
-import { WAVE_TYPES, ROOT_NOTES, SCALES } from "../lib/hoverSound";
+import {
+  WAVE_TYPES,
+  FILTER_TYPES,
+  FILTER_SLOPES,
+  ROOT_NOTES,
+  SCALES,
+} from "../lib/hoverSound";
 
 const LAYOUT_KEY = "hoverSynthLayout";
 const PANEL_WIDTH = 288; // matches w-72
+const BUBBLE_SIZE = 44; // matches w-11 (minimized circle)
 // Actual gain cap — kept low so it isn't too loud. Displayed to the user as
 // 100% (the slider shows a percentage of this range, not raw gain).
 const MAX_VOLUME = 0.6;
@@ -14,6 +21,18 @@ const SCALE_LABELS = {
   majorPentatonic: "Major Pentatonic",
   minorPentatonic: "Minor Pentatonic",
   dorian: "Dorian",
+};
+
+const FILTER_LABELS = {
+  lowpass: "Low-pass",
+  highpass: "High-pass",
+};
+
+const SLOPE_LABELS = {
+  12: "12",
+  24: "24",
+  48: "48",
+  96: "Wall",
 };
 
 function loadLayout() {
@@ -42,8 +61,62 @@ function saveLayout(layout) {
   }
 }
 
-// A labeled range slider row.
-function Slider({ label, value, min, max, step, onChange, format }) {
+// A collapsible section with a clickable header (accordion item).
+function Collapsible({ title, open, onToggle, children }) {
+  return (
+    <div className="pt-1 border-t border-primary/30">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center justify-between text-xs font-heading text-primary py-0.5 hover:text-hover"
+      >
+        <span>{title}</span>
+        <i
+          className={`fa-solid fa-chevron-down text-[10px] transition-transform ${
+            open ? "" : "-rotate-90"
+          }`}
+        />
+      </button>
+      {open && <div className="flex flex-col gap-2 pt-1">{children}</div>}
+    </div>
+  );
+}
+
+// A labeled range slider row. Supports a logarithmic scale (so frequency ramps
+// up more sharply toward the right) and a fill that can start from either end.
+function Slider({
+  label,
+  value,
+  min,
+  max,
+  step,
+  onChange,
+  format,
+  scale = "linear",
+  fillFrom = "left",
+}) {
+  const isLog = scale === "log";
+  const lmin = isLog ? Math.log(min) : 0;
+  const lmax = isLog ? Math.log(max) : 0;
+
+  // Position of the thumb as a 0..1 fraction of the track.
+  const pos = isLog
+    ? (Math.log(value) - lmin) / (lmax - lmin)
+    : (value - min) / (max - min);
+  const percent = Math.min(100, Math.max(0, pos * 100));
+
+  const handleChange = (e) => {
+    const raw = parseFloat(e.target.value);
+    onChange(isLog ? Math.exp(lmin + raw * (lmax - lmin)) : raw);
+  };
+
+  const filled = "var(--color-primary)";
+  const empty = "#d6d3d1"; // stone-300
+  const track =
+    fillFrom === "right"
+      ? `linear-gradient(to right, ${empty} ${percent}%, ${filled} ${percent}%)`
+      : `linear-gradient(to right, ${filled} ${percent}%, ${empty} ${percent}%)`;
+
   return (
     <label className="flex flex-col gap-0.5 text-xs">
       <span className="flex justify-between text-primary">
@@ -52,12 +125,13 @@ function Slider({ label, value, min, max, step, onChange, format }) {
       </span>
       <input
         type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full accent-primary"
+        min={isLog ? 0 : min}
+        max={isLog ? 1 : max}
+        step={isLog ? 0.001 : step}
+        value={isLog ? pos : value}
+        onChange={handleChange}
+        className="synth-range w-full"
+        style={{ background: track }}
       />
     </label>
   );
@@ -66,11 +140,23 @@ function Slider({ label, value, min, max, step, onChange, format }) {
 export default function SynthControlPanel() {
   const [settings, update] = useSynthSettings();
   const [layout, setLayout] = useState(loadLayout);
+  const [openSection, setOpenSection] = useState({
+    envelope: true,
+    filter: false,
+  });
   const dragRef = useRef(null);
+
+  const toggleSection = (key) =>
+    setOpenSection((s) => ({ ...s, [key]: !s[key] }));
 
   const setMinimized = (minimized) => {
     setLayout((l) => {
-      const next = { ...l, minimized };
+      // Anchor the top-right corner across the toggle so the minimized bubble
+      // lands where the minimize button was (under the cursor), and expanding
+      // restores the panel to its original spot.
+      const dx = PANEL_WIDTH - BUBBLE_SIZE;
+      const x = minimized ? l.x + dx : l.x - dx;
+      const next = { ...l, minimized, x };
       saveLayout(next);
       return next;
     });
@@ -121,6 +207,12 @@ export default function SynthControlPanel() {
     onPointerUp,
     style: { touchAction: "none" },
   };
+
+  // The filter tabs each keep their own cutoff + Q + slope; bind to the active.
+  const isHighpass = settings.filterType === "highpass";
+  const freqKey = isHighpass ? "highpassFrequency" : "lowpassFrequency";
+  const qKey = isHighpass ? "highpassQ" : "lowpassQ";
+  const slopeKey = isHighpass ? "highpassSlope" : "lowpassSlope";
 
   return (
     <div
@@ -176,6 +268,17 @@ export default function SynthControlPanel() {
               settings.enabled ? "" : "opacity-50"
             }`}
           >
+            {/* Volume */}
+            <Slider
+              label="Volume"
+              value={settings.volume}
+              min={0}
+              max={MAX_VOLUME}
+              step={0.01}
+              onChange={(v) => update({ volume: v })}
+              format={(v) => `${Math.round((v / MAX_VOLUME) * 100)}%`}
+            />
+
             {/* Wave type */}
             <div className="flex flex-col gap-1">
               <span className="text-xs">Wave</span>
@@ -229,20 +332,12 @@ export default function SynthControlPanel() {
               </label>
             </div>
 
-            {/* Volume */}
-            <Slider
-              label="Volume"
-              value={settings.volume}
-              min={0}
-              max={MAX_VOLUME}
-              step={0.01}
-              onChange={(v) => update({ volume: v })}
-              format={(v) => `${Math.round((v / MAX_VOLUME) * 100)}%`}
-            />
-
-            {/* ADSR */}
-            <div className="flex flex-col gap-2 pt-1 border-t border-primary/30">
-              <span className="text-xs font-heading">Envelope</span>
+            {/* Envelope (ADSR) */}
+            <Collapsible
+              title="Envelope"
+              open={openSection.envelope}
+              onToggle={() => toggleSection("envelope")}
+            >
               <Slider
                 label="Attack"
                 value={settings.attack}
@@ -279,7 +374,77 @@ export default function SynthControlPanel() {
                 onChange={(v) => update({ release: v })}
                 format={(v) => `${Math.round(v * 1000)}ms`}
               />
-            </div>
+            </Collapsible>
+
+            {/* Filter */}
+            <Collapsible
+              title="Filter"
+              open={openSection.filter}
+              onToggle={() => toggleSection("filter")}
+            >
+              {/* Filter type tabs */}
+              <div className="flex">
+                {FILTER_TYPES.map((f, i) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => update({ filterType: f })}
+                    className={`flex-1 text-xs py-1 border ${
+                      i === 0 ? "rounded-l" : "-ml-px rounded-r"
+                    } ${
+                      settings.filterType === f
+                        ? "relative z-10 bg-primary text-bg border-primary"
+                        : "border-primary text-primary hover:text-hover hover:border-hover"
+                    }`}
+                  >
+                    {FILTER_LABELS[f] || f}
+                  </button>
+                ))}
+              </div>
+              <Slider
+                label="Frequency"
+                value={settings[freqKey]}
+                min={20}
+                max={20000}
+                scale="log"
+                fillFrom={isHighpass ? "right" : "left"}
+                onChange={(v) => update({ [freqKey]: v })}
+                format={(v) =>
+                  v >= 1000
+                    ? `${(v / 1000).toFixed(1)}kHz`
+                    : `${Math.round(v)}Hz`
+                }
+              />
+              <Slider
+                label="Quality"
+                value={settings[qKey]}
+                min={0.1}
+                max={20}
+                step={0.1}
+                onChange={(v) => update({ [qKey]: v })}
+                format={(v) => v.toFixed(1)}
+              />
+              {/* Slope (dB/octave) */}
+              <div className="flex flex-col gap-1">
+                <span className="text-xs">Slope (dB/oct)</span>
+                <div className="grid grid-cols-4 gap-1">
+                  {FILTER_SLOPES.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => update({ [slopeKey]: s })}
+                      className={`text-xs py-1 rounded border ${
+                        settings[slopeKey] === s
+                          ? "bg-primary text-bg border-primary"
+                          : "border-primary text-primary hover:text-hover hover:border-hover"
+                      }`}
+                    >
+                      {SLOPE_LABELS[s] || s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </Collapsible>
           </div>
         </div>
       )}

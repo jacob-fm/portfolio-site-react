@@ -15,6 +15,13 @@ const STORAGE_KEY = "hoverSynthSettings";
 // Wave types the oscillator supports (also drives the panel's selector).
 export const WAVE_TYPES = ["sine", "triangle", "square", "sawtooth"];
 
+// Biquad filter types offered in the panel.
+export const FILTER_TYPES = ["lowpass", "highpass"];
+
+// Filter slope in dB/octave. Each biquad stage is 12 dB/oct, so these map to a
+// cascade of 1/2/4/8 stages; 96 dB/oct is steep enough to feel like a wall.
+export const FILTER_SLOPES = [12, 24, 48, 96];
+
 // The 12 root note names → semitone offset from A4 (440 Hz) within one octave.
 export const ROOT_NOTES = {
   C: -9,
@@ -51,6 +58,14 @@ const DEFAULT_SETTINGS = {
   root: "C",
   scale: "major",
   baseOctave: 4,
+  filterType: "lowpass", // active filter: "lowpass" | "highpass"
+  // Each filter type keeps its own cutoff + Q + slope so tabs are independent.
+  lowpassFrequency: 20000, // Hz — neutral (passes everything below)
+  lowpassQ: 1,
+  lowpassSlope: 12, // dB/octave
+  highpassFrequency: 20, // Hz — neutral (passes everything above)
+  highpassQ: 1,
+  highpassSlope: 12, // dB/octave
 };
 
 // Small hold so the sustain stage is audible for a one-shot (no key-hold) note.
@@ -166,8 +181,34 @@ export function playHoverNote(index = 0) {
   gain.gain.exponentialRampToValueAtTime(sustainLevel, decayEnd);
   gain.gain.setValueAtTime(sustainLevel, sustainEnd);
   gain.gain.exponentialRampToValueAtTime(0.0001, releaseEnd);
+  // Exponential ramps can't reach 0; finish with a tiny linear fade to true
+  // silence so the oscillator isn't cut off mid-signal (which clicks).
+  gain.gain.linearRampToValueAtTime(0, releaseEnd + 0.005);
 
-  osc.connect(gain).connect(ctx.destination);
+  // Filter: a cascade of biquad stages between the gain stage and output.
+  // Each stage is 12 dB/oct, so slope/12 stages gives the requested steepness,
+  // using the active type's own cutoff, Q, and slope.
+  const isHighpass = settings.filterType === "highpass";
+  const filterFreq = isHighpass
+    ? settings.highpassFrequency
+    : settings.lowpassFrequency;
+  const q = isHighpass ? settings.highpassQ : settings.lowpassQ;
+  const slope = isHighpass ? settings.highpassSlope : settings.lowpassSlope;
+  const stages = Math.max(1, Math.round(slope / 12));
+
+  osc.connect(gain);
+  let node = gain;
+  for (let i = 0; i < stages; i++) {
+    const biquad = ctx.createBiquadFilter();
+    biquad.type = settings.filterType;
+    biquad.frequency.value = filterFreq;
+    // The user's Q shapes the first stage; extra stages stay flat (Butterworth)
+    // so they only steepen the slope instead of compounding the resonance.
+    biquad.Q.value = i === 0 ? q : Math.SQRT1_2;
+    node.connect(biquad);
+    node = biquad;
+  }
+  node.connect(ctx.destination);
   osc.start(now);
-  osc.stop(releaseEnd + 0.01);
+  osc.stop(releaseEnd + 0.02);
 }

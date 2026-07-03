@@ -43,3 +43,36 @@
   .blog-content pre { @apply bg-bg-dark p-4 rounded-lg overflow-x-auto my-4; }
   .blog-content img { @apply max-w-full rounded-lg my-4; }
 }
+
+/* Custom range slider for the synth panel — the track background is set inline
+   as a gradient so the filled portion can start from either end. */
+.synth-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+}
+.synth-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+}
+.synth-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+}
+.synth-range::-moz-range-track,
+.synth-range::-moz-range-progress {
+  background: transparent;
+}

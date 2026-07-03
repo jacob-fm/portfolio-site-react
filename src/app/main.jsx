@@ -15,6 +15,7 @@ import Nigunim from "../routes/projects/Nigunim.jsx";
 import Blog from "../routes/Blog.jsx";
 import BlogPost from "../routes/BlogPost.jsx";
 import Strudel from "../routes/Strudel.jsx";
+import Umbral from "../routes/projects/Umbral.jsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     element: <App />,
     // TODO: better 404 page
     errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/umbral",
+    element: <Umbral />,
   },
   {
     path: "/pointcloud",

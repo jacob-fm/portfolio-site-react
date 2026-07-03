@@ -109,6 +109,12 @@ export function setSynthSettings(partial) {
   return { ...settings };
 }
 
+// Restore all sound settings to their defaults, preserving the current
+// enabled state (so a reset doesn't unexpectedly turn the synth off).
+export function resetSynthSettings() {
+  return setSynthSettings({ ...DEFAULT_SETTINGS, enabled: settings.enabled });
+}
+
 let audioCtx = null;
 
 function getAudioContext() {

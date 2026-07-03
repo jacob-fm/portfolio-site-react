@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSynthSettings from "../hooks/useSynthSettings";
 import {
   WAVE_TYPES,
@@ -146,9 +146,26 @@ function Slider({
 }
 
 export default function SynthControlPanel() {
-  const [settings, update] = useSynthSettings();
+  const [settings, update, reset] = useSynthSettings();
   const [layout, setLayout] = useState(loadLayout);
+  const [showCallout, setShowCallout] = useState(false);
   const dragRef = useRef(null);
+  const calloutTimer = useRef(null);
+
+  useEffect(() => () => clearTimeout(calloutTimer.current), []);
+
+  // Toggle the synth, and on enable show a fading hint above the panel.
+  const toggleEnabled = () => {
+    const next = !settings.enabled;
+    update({ enabled: next });
+    clearTimeout(calloutTimer.current);
+    if (next) {
+      setShowCallout(true);
+      calloutTimer.current = setTimeout(() => setShowCallout(false), 5000);
+    } else {
+      setShowCallout(false);
+    }
+  };
 
   const toggleSection = (key) =>
     setLayout((l) => {
@@ -237,7 +254,19 @@ export default function SynthControlPanel() {
           <i className="fa-solid fa-wave-square" />
         </button>
       ) : (
-        <div className="w-72 bg-bg border border-primary rounded-lg shadow-xl text-primary select-none">
+        <div className="relative w-72 bg-bg border border-primary rounded-lg shadow-xl text-primary select-none">
+          {/* "Move the cursor around" hint, shown briefly on enable */}
+          <div
+            className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none transition-opacity duration-700 ${
+              showCallout ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <div className="whitespace-nowrap rounded-lg bg-primary text-bg text-xs px-3 py-1.5 shadow-lg">
+              Move the cursor around to play!
+            </div>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary" />
+          </div>
+
           {/* Header / drag handle */}
           <div
             {...dragHandlers}
@@ -248,7 +277,16 @@ export default function SynthControlPanel() {
               <button
                 type="button"
                 onPointerDown={(e) => e.stopPropagation()}
-                onClick={() => update({ enabled: !settings.enabled })}
+                onClick={reset}
+                title="Reset to defaults"
+                className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+              >
+                <i className="fa-solid fa-rotate-left" />
+              </button>
+              <button
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={toggleEnabled}
                 title={settings.enabled ? "Disable" : "Enable"}
                 className={`w-6 h-6 flex items-center justify-center rounded ${
                   settings.enabled

@@ -1,5 +1,9 @@
 import { useState, useCallback } from "react";
-import { getSynthSettings, setSynthSettings } from "../lib/hoverSound";
+import {
+  getSynthSettings,
+  setSynthSettings,
+  resetSynthSettings,
+} from "../lib/hoverSound";
 
 // Bridges the SynthControlPanel UI to the hoverSound engine. The engine's
 // module-level settings remain the source of truth for playHoverNote(); this
@@ -11,5 +15,9 @@ export default function useSynthSettings() {
     setSettings(setSynthSettings(partial));
   }, []);
 
-  return [settings, update];
+  const reset = useCallback(() => {
+    setSettings(resetSynthSettings());
+  }, []);
+
+  return [settings, update, reset];
 }

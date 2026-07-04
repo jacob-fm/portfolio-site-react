@@ -186,7 +186,7 @@ function Collapsible({ title, open, onToggle, children }) {
       <button
         type="button"
         onClick={onToggle}
-        className="cursor-pointer w-full flex items-center justify-between text-xs font-heading text-primary py-0.5 hover:text-hover"
+        className="cursor-pointer w-full flex items-center justify-between text-sm font-heading text-primary py-0.5 hover:text-hover"
       >
         <span>{title}</span>
         <i
@@ -814,7 +814,7 @@ export default function SynthControlPanel() {
               <button
                 type="button"
                 onClick={toggleEnabled}
-                className={`relative cursor-pointer w-full flex items-center justify-center gap-2 py-1.5 rounded border text-xs ${
+                className={`relative cursor-pointer w-full flex items-center justify-center gap-2 py-1.5 rounded border text-md ${
                   settings.enabled
                     ? "bg-primary text-bg border-primary"
                     : "border-primary text-primary hover:text-hover hover:border-hover"

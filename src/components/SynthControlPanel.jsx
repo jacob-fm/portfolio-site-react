@@ -45,6 +45,79 @@ const SLOPE_LABELS = {
   96: "Wall",
 };
 
+// Given an anchor point, return Tailwind classes placing a callout on its
+// center-facing side, with the arrow pointing back toward the anchor. Used by
+// both the load hint (anchored to the bubble) and the cursor callout.
+function calloutPlacement(pointX, pointY) {
+  const vw = typeof window !== "undefined" ? window.innerWidth : 0;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 0;
+  const onLeft = pointX < vw / 2;
+  const onTop = pointY < vh / 2;
+  return {
+    box: `${onTop ? "top-full mt-2" : "bottom-full mb-2"} ${
+      onLeft ? "left-0" : "right-0"
+    }`,
+    enter: onTop ? "-translate-y-2" : "translate-y-2",
+    arrow: `${
+      onTop ? "bottom-full border-b-primary" : "top-full border-t-primary"
+    } ${onLeft ? "left-4" : "right-4"}`,
+  };
+}
+
+// Track the cursor globally so a callout can appear at the last-known position
+// even before the first mousemove after it's shown.
+let lastCursor = { x: 0, y: 0 };
+if (typeof window !== "undefined") {
+  window.addEventListener(
+    "mousemove",
+    (e) => {
+      lastCursor = { x: e.clientX, y: e.clientY };
+    },
+    { passive: true },
+  );
+}
+
+// A callout that points at the cursor and follows it while shown, flipping to
+// the cursor's center-facing side so it stays on-screen.
+function CursorCallout({ show, text }) {
+  const [pos, setPos] = useState(lastCursor);
+
+  useEffect(() => {
+    if (!show) return undefined;
+    setPos(lastCursor);
+    const onMove = (e) => setPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [show]);
+
+  // Vertical placement toward center (from the shared logic), but horizontally
+  // centered on the cursor so there's no sideways gap.
+  const vh = typeof window !== "undefined" ? window.innerHeight : 0;
+  const below = pos.y < vh / 2; // cursor in top half → callout below it
+  const box = `left-1/2 -translate-x-1/2 ${below ? "top-full mt-2" : "bottom-full mb-2"}`;
+  const arrow = `left-1/2 -translate-x-1/2 ${
+    below ? "bottom-full border-b-primary" : "top-full border-t-primary"
+  }`;
+
+  return (
+    <div
+      className="hidden md:block fixed z-40 pointer-events-none"
+      style={{ left: pos.x, top: pos.y }}
+    >
+      <div
+        className={`absolute ${box} transition-opacity ${
+          show ? "opacity-100 duration-200" : "opacity-0 duration-500"
+        }`}
+      >
+        <div className="whitespace-nowrap rounded-lg bg-primary/95 text-bg text-base md:text-lg font-light px-4 py-2 shadow-lg">
+          {text}
+        </div>
+        <div className={`absolute ${arrow} border-4 border-transparent`} />
+      </div>
+    </div>
+  );
+}
+
 // Keep a position within the viewport so the panel/bubble is never off-screen
 // (e.g. a position saved on a wider window then loaded on a smaller display).
 function clampPosition(x, y, minimized) {
@@ -285,7 +358,6 @@ export default function SynthControlPanel() {
   const [loadHintMounted, setLoadHintMounted] = useState(true);
   const dragRef = useRef(null);
   const calloutTimer = useRef(null);
-  const hasExpandedRef = useRef(false);
   const layoutRef = useRef(layout);
   const panelRef = useRef(null);
 
@@ -396,11 +468,6 @@ export default function SynthControlPanel() {
     // Expanding dismisses the load hint for good — it only shows on first load,
     // never when the user later re-minimizes the panel.
     if (!minimized) setLoadHintMounted(false);
-    // Show the hint the first time the panel is expanded after page load.
-    if (!minimized && !hasExpandedRef.current) {
-      hasExpandedRef.current = true;
-      triggerCallout();
-    }
     setLayout((l) => {
       // Anchor the top-right corner across the toggle so the minimized bubble
       // lands where the minimize button was (under the cursor), and expanding
@@ -467,32 +534,18 @@ export default function SynthControlPanel() {
 
   // Place the load hint on the bubble's center-facing side so it stays visible
   // wherever the bubble sits, with the arrow pointing back toward the bubble.
-  const vw = typeof window !== "undefined" ? window.innerWidth : 0;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 0;
-  const bubbleOnLeft = layout.x + BUBBLE_SIZE / 2 < vw / 2;
-  const bubbleOnTop = layout.y + BUBBLE_SIZE / 2 < vh / 2;
-  const hint = {
-    box: `${bubbleOnTop ? "top-full mt-2" : "bottom-full mb-2"} ${
-      bubbleOnLeft ? "left-0" : "right-0"
-    }`,
-    enter: bubbleOnTop ? "-translate-y-2" : "translate-y-2",
-    arrow: `${
-      bubbleOnTop ? "bottom-full border-b-primary" : "top-full border-t-primary"
-    } ${bubbleOnLeft ? "left-4" : "right-4"}`,
-  };
+  const hint = calloutPlacement(
+    layout.x + BUBBLE_SIZE / 2,
+    layout.y + BUBBLE_SIZE / 2,
+  );
 
   return (
     <TooltipProvider>
-      {/* Centered "move the cursor" hint, shown briefly on enable / first open */}
-      <div
-        className={`hidden md:flex fixed inset-0 z-40 items-center justify-center pointer-events-none transition-opacity ${
-          showCallout ? "opacity-100 duration-220" : "opacity-0 duration-700"
-        }`}
-      >
-        <div className="bg-primary/90 text-bg font-sans font-light text-3xl lg:text-4xl px-10 py-7 shadow-2xl text-center">
-          Move the cursor around the page to play!
-        </div>
-      </div>
+      {/* "Move the cursor" hint that points at and follows the cursor */}
+      <CursorCallout
+        show={showCallout}
+        text="Move the cursor around the page to play!"
+      />
 
       <div
         ref={panelRef}
@@ -641,7 +694,7 @@ export default function SynthControlPanel() {
                   step={0.005}
                   onChange={(v) => update({ attack: v })}
                   format={(v) => `${Math.round(v * 1000)}ms`}
-                  tooltip="How quickly each sound fades in when it starts — low is an instant hit, high eases in gently"
+                  tooltip="How quickly each sound fades in when it starts"
                 />
                 <Slider
                   label="Decay"
@@ -651,7 +704,7 @@ export default function SynthControlPanel() {
                   step={0.005}
                   onChange={(v) => update({ decay: v })}
                   format={(v) => `${Math.round(v * 1000)}ms`}
-                  tooltip="How quickly the sound drops from its initial peak down to the held level"
+                  tooltip="How quickly the sound drops from its initial peak down to the Sustain level"
                 />
                 <Slider
                   label="Sustain"
@@ -661,7 +714,7 @@ export default function SynthControlPanel() {
                   step={0.01}
                   onChange={(v) => update({ sustain: v })}
                   format={(v) => `${Math.round(v * 100)}%`}
-                  tooltip="How loud the sound stays after the initial hit, for as long as it's held"
+                  tooltip="How loud the sound stays after the initial hit"
                 />
                 <Slider
                   label="Release"

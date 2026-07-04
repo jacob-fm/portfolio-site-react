@@ -48,7 +48,7 @@ export const SCALES = {
 };
 
 const DEFAULT_SETTINGS = {
-  enabled: false,
+  enabled: true,
   waveType: "triangle",
   volume: 0.3,
   attack: 0.005, // seconds, 0 → peak
@@ -72,14 +72,14 @@ const DEFAULT_SETTINGS = {
 const SUSTAIN_HOLD = 0.06;
 
 function loadSettings() {
-  // Always start disabled: browsers block audio until a user gesture, and
-  // hovering isn't one. The panel's enable toggle (a click) unlocks it. Other
-  // settings are still restored from localStorage.
+  // Always start enabled: the synth loads on (but minimized in the panel).
+  // Browsers block audio until a user gesture, so installAudioUnlock() resumes
+  // the context on the first interaction. Other settings restore from storage.
   if (typeof localStorage === "undefined") return { ...DEFAULT_SETTINGS };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_SETTINGS };
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw), enabled: false };
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw), enabled: true };
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
@@ -124,6 +124,24 @@ function getAudioContext() {
   if (!audioCtx) audioCtx = new Ctx();
   return audioCtx;
 }
+
+// The synth loads enabled, but browsers keep audio suspended until the user
+// interacts with the page (hovering doesn't count). Resume the context on the
+// first real gesture so hover sounds work without needing to open the panel.
+function installAudioUnlock() {
+  if (typeof window === "undefined") return;
+  const unlock = () => {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === "suspended") ctx.resume().catch(() => {});
+    window.removeEventListener("pointerdown", unlock);
+    window.removeEventListener("keydown", unlock);
+    window.removeEventListener("touchstart", unlock);
+  };
+  window.addEventListener("pointerdown", unlock);
+  window.addEventListener("keydown", unlock);
+  window.addEventListener("touchstart", unlock);
+}
+installAudioUnlock();
 
 // Frequency (Hz) for a thumbnail index given the current key settings.
 function frequencyForIndex(index) {

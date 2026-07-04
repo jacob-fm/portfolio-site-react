@@ -35,12 +35,27 @@ const SLOPE_LABELS = {
   96: "Wall",
 };
 
+// Keep a position within the viewport so the panel/bubble is never off-screen
+// (e.g. a position saved on a wider window then loaded on a smaller display).
+function clampPosition(x, y, minimized) {
+  if (typeof window === "undefined") return { x, y };
+  const width = minimized ? BUBBLE_SIZE : PANEL_WIDTH;
+  const margin = 8;
+  const maxX = Math.max(margin, window.innerWidth - width - margin);
+  const maxY = Math.max(margin, window.innerHeight - BUBBLE_SIZE - margin);
+  return {
+    x: Math.min(Math.max(margin, x), maxX),
+    y: Math.min(Math.max(margin, y), maxY),
+  };
+}
+
 function loadLayout() {
   const fallback = {
+    // Bubble anchored near the top-right corner (starts minimized).
     x:
-      typeof window !== "undefined" ? window.innerWidth - PANEL_WIDTH - 24 : 24,
+      typeof window !== "undefined" ? window.innerWidth - BUBBLE_SIZE - 24 : 24,
     y: 96,
-    minimized: false,
+    minimized: true,
     // Which accordion sections are expanded — all open by default.
     sections: { envelope: true, filter: true },
   };
@@ -49,9 +64,19 @@ function loadLayout() {
     const raw = localStorage.getItem(LAYOUT_KEY);
     if (!raw) return fallback;
     const parsed = JSON.parse(raw);
+    // Always start minimized. If the stored state was expanded, shift x so the
+    // bubble lands where the panel's top-right (minimize button) was — keeping
+    // the position consistent for when it's expanded again.
+    let x = parsed.x ?? fallback.x;
+    if (parsed.minimized === false) x += PANEL_WIDTH - BUBBLE_SIZE;
+    // Clamp to the current viewport (starts minimized, so use the bubble size).
+    const clamped = clampPosition(x, parsed.y ?? fallback.y, true);
     return {
       ...fallback,
       ...parsed,
+      x: clamped.x,
+      y: clamped.y,
+      minimized: true,
       // Merge sections so any newly-added section defaults to open.
       sections: { ...fallback.sections, ...(parsed.sections || {}) },
     };
@@ -151,30 +176,80 @@ export default function SynthControlPanel() {
   const [showCallout, setShowCallout] = useState(false);
   const dragRef = useRef(null);
   const calloutTimer = useRef(null);
+  const hasExpandedRef = useRef(false);
+  const layoutRef = useRef(layout);
+
+  // Keep a ref to the latest layout so the resize handler can read it without
+  // doing stateful work inside a setState updater (which StrictMode double-runs).
+  useEffect(() => {
+    layoutRef.current = layout;
+  });
 
   useEffect(() => () => clearTimeout(calloutTimer.current), []);
 
-  // Toggle the synth, and on enable show a fading hint above the panel.
+  // On resize/zoom, keep the panel at the same fractional position (rather than
+  // a fixed pixel offset that drifts toward center as the viewport grows).
+  useEffect(() => {
+    let prev = { w: window.innerWidth, h: window.innerHeight };
+    const onResize = () => {
+      const l = layoutRef.current;
+      const width = l.minimized ? BUBBLE_SIZE : PANEL_WIDTH;
+      // Available space = viewport minus the element; scale x/y by its change.
+      const oldAvailW = Math.max(1, prev.w - width);
+      const newAvailW = Math.max(1, window.innerWidth - width);
+      const oldAvailH = Math.max(1, prev.h - BUBBLE_SIZE);
+      const newAvailH = Math.max(1, window.innerHeight - BUBBLE_SIZE);
+      prev = { w: window.innerWidth, h: window.innerHeight };
+      const c = clampPosition(
+        (l.x * newAvailW) / oldAvailW,
+        (l.y * newAvailH) / oldAvailH,
+        l.minimized,
+      );
+      if (c.x === l.x && c.y === l.y) return;
+      const next = { ...l, x: c.x, y: c.y };
+      layoutRef.current = next;
+      setLayout(next);
+      saveLayout(next);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Show the centered "move the cursor" hint, fading it out after 5 seconds.
+  const triggerCallout = () => {
+    setShowCallout(true);
+    clearTimeout(calloutTimer.current);
+    calloutTimer.current = setTimeout(() => setShowCallout(false), 2000);
+  };
+
+  // Toggle the synth; show the hint when enabling, hide it when disabling.
   const toggleEnabled = () => {
     const next = !settings.enabled;
     update({ enabled: next });
-    clearTimeout(calloutTimer.current);
     if (next) {
-      setShowCallout(true);
-      calloutTimer.current = setTimeout(() => setShowCallout(false), 5000);
+      triggerCallout();
     } else {
+      clearTimeout(calloutTimer.current);
       setShowCallout(false);
     }
   };
 
   const toggleSection = (key) =>
     setLayout((l) => {
-      const next = { ...l, sections: { ...l.sections, [key]: !l.sections[key] } };
+      const next = {
+        ...l,
+        sections: { ...l.sections, [key]: !l.sections[key] },
+      };
       saveLayout(next);
       return next;
     });
 
   const setMinimized = (minimized) => {
+    // Show the hint the first time the panel is expanded after page load.
+    if (!minimized && !hasExpandedRef.current) {
+      hasExpandedRef.current = true;
+      triggerCallout();
+    }
     setLayout((l) => {
       // Anchor the top-right corner across the toggle so the minimized bubble
       // lands where the minimize button was (under the cursor), and expanding
@@ -240,260 +315,265 @@ export default function SynthControlPanel() {
   const slopeKey = isHighpass ? "highpassSlope" : "lowpassSlope";
 
   return (
-    <div
-      className="hidden md:block fixed z-30"
-      style={{ left: layout.x, top: layout.y }}
-    >
-      {layout.minimized ? (
-        <button
-          type="button"
-          {...dragHandlers}
-          title="Open hover synth"
-          className="cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
-        >
-          <i className="fa-solid fa-wave-square" />
-        </button>
-      ) : (
-        <div className="relative w-72 bg-bg border border-primary rounded-lg shadow-xl text-primary select-none">
-          {/* "Move the cursor around" hint, shown briefly on enable */}
-          <div
-            className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none transition-opacity duration-700 ${
-              showCallout ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <div className="whitespace-nowrap rounded-lg bg-primary text-bg text-xs px-3 py-1.5 shadow-lg">
-              Move the cursor around to play!
-            </div>
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary" />
-          </div>
+    <>
+      {/* Centered "move the cursor" hint, shown briefly on enable / first open */}
+      <div
+        className={`hidden md:flex fixed inset-0 z-40 items-center justify-center pointer-events-none transition-opacity ${
+          showCallout ? "opacity-100 duration-220" : "opacity-0 duration-700"
+        }`}
+      >
+        <div className="bg-primary/90 text-bg font-sans font-light text-3xl lg:text-4xl px-10 py-7 shadow-2xl text-center">
+          Move the cursor around the page to play!
+        </div>
+      </div>
 
-          {/* Header / drag handle */}
-          <div
+      <div
+        className="hidden md:block fixed z-30"
+        style={{ left: layout.x, top: layout.y }}
+      >
+        {layout.minimized ? (
+          <button
+            type="button"
             {...dragHandlers}
-            className="cursor-grab active:cursor-grabbing flex items-center justify-between px-3 py-2 border-b border-primary bg-bg-dark rounded-t-lg"
+            title="Open hover synth"
+            className="cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
           >
-            <span className="font-heading text-base">Hover Synth</span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={reset}
-                title="Reset to defaults"
-                className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
-              >
-                <i className="fa-solid fa-rotate-left" />
-              </button>
-              <button
-                type="button"
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={toggleEnabled}
-                title={settings.enabled ? "Disable" : "Enable"}
-                className={`w-6 h-6 flex items-center justify-center rounded ${
-                  settings.enabled
-                    ? "text-primary hover:text-hover"
-                    : "text-stone-400 hover:text-stone-600"
-                }`}
-              >
-                <i className="fa-solid fa-power-off" />
-              </button>
-              <button
-                type="button"
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={() => setMinimized(true)}
-                title="Minimize"
-                className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
-              >
-                <i className="fa-solid fa-minus" />
-              </button>
-            </div>
-          </div>
-
-          {/* Body */}
-          <div
-            className={`flex flex-col gap-3 p-3 ${
-              settings.enabled ? "" : "opacity-50"
-            }`}
-          >
-            {/* Volume */}
-            <Slider
-              label="Volume"
-              value={settings.volume}
-              min={0}
-              max={MAX_VOLUME}
-              step={0.01}
-              onChange={(v) => update({ volume: v })}
-              format={(v) => `${Math.round((v / MAX_VOLUME) * 100)}%`}
-            />
-
-            {/* Wave type */}
-            <div className="flex flex-col gap-1">
-              <span className="text-xs">Wave</span>
-              <div className="grid grid-cols-4 gap-1">
-                {WAVE_TYPES.map((w) => (
-                  <button
-                    key={w}
-                    type="button"
-                    onClick={() => update({ waveType: w })}
-                    className={`text-xs py-1 rounded border capitalize ${
-                      settings.waveType === w
-                        ? "bg-primary text-bg border-primary"
-                        : "border-primary text-primary hover:text-hover hover:border-hover"
-                    }`}
-                  >
-                    {w}
-                  </button>
-                ))}
+            <i className="fa-solid fa-wave-square" />
+          </button>
+        ) : (
+          <div className="w-72 bg-bg border border-primary rounded-lg shadow-xl text-primary select-none">
+            {/* Header / drag handle */}
+            <div
+              {...dragHandlers}
+              className="cursor-grab active:cursor-grabbing flex items-center justify-between px-3 py-2 border-b border-primary bg-bg-dark rounded-t-lg"
+            >
+              <span className="font-heading text-base">Hover Synth</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={reset}
+                  title="Reset to defaults"
+                  className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+                >
+                  <i className="fa-solid fa-rotate-left" />
+                </button>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => setMinimized(true)}
+                  title="Minimize"
+                  className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+                >
+                  <i className="fa-solid fa-minus" />
+                </button>
               </div>
             </div>
 
-            {/* Key: root + scale */}
-            <div className="flex gap-2">
-              <label className="flex flex-col gap-0.5 text-xs flex-1">
-                <span>Root</span>
-                <select
-                  value={settings.root}
-                  onChange={(e) => update({ root: e.target.value })}
-                  className="border border-primary rounded px-1 py-1 bg-bg text-primary"
-                >
-                  {Object.keys(ROOT_NOTES).map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col gap-0.5 text-xs flex-1">
-                <span>Scale</span>
-                <select
-                  value={settings.scale}
-                  onChange={(e) => update({ scale: e.target.value })}
-                  className="border border-primary rounded px-1 py-1 bg-bg text-primary"
-                >
-                  {Object.keys(SCALES).map((s) => (
-                    <option key={s} value={s}>
-                      {SCALE_LABELS[s] || s}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            {/* Envelope (ADSR) */}
-            <Collapsible
-              title="Envelope"
-              open={layout.sections.envelope}
-              onToggle={() => toggleSection("envelope")}
+            {/* Body */}
+            <div
+              className={`flex flex-col gap-3 p-3 ${
+                settings.enabled ? "" : "opacity-50"
+              }`}
             >
+              {/* Volume */}
               <Slider
-                label="Attack"
-                value={settings.attack}
+                label="Volume"
+                value={settings.volume}
                 min={0}
-                max={0.5}
-                step={0.005}
-                onChange={(v) => update({ attack: v })}
-                format={(v) => `${Math.round(v * 1000)}ms`}
-              />
-              <Slider
-                label="Decay"
-                value={settings.decay}
-                min={0}
-                max={1}
-                step={0.005}
-                onChange={(v) => update({ decay: v })}
-                format={(v) => `${Math.round(v * 1000)}ms`}
-              />
-              <Slider
-                label="Sustain"
-                value={settings.sustain}
-                min={0}
-                max={1}
+                max={MAX_VOLUME}
                 step={0.01}
-                onChange={(v) => update({ sustain: v })}
-                format={(v) => `${Math.round(v * 100)}%`}
+                onChange={(v) => update({ volume: v })}
+                format={(v) => `${Math.round((v / MAX_VOLUME) * 100)}%`}
               />
-              <Slider
-                label="Release"
-                value={settings.release}
-                min={0}
-                max={1}
-                step={0.005}
-                onChange={(v) => update({ release: v })}
-                format={(v) => `${Math.round(v * 1000)}ms`}
-              />
-            </Collapsible>
 
-            {/* Filter */}
-            <Collapsible
-              title="Filter"
-              open={layout.sections.filter}
-              onToggle={() => toggleSection("filter")}
-            >
-              {/* Filter type tabs */}
-              <div className="flex">
-                {FILTER_TYPES.map((f, i) => (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => update({ filterType: f })}
-                    className={`flex-1 text-xs py-1 border ${
-                      i === 0 ? "rounded-l" : "-ml-px rounded-r"
-                    } ${
-                      settings.filterType === f
-                        ? "relative z-10 bg-primary text-bg border-primary"
-                        : "border-primary text-primary hover:text-hover hover:border-hover"
-                    }`}
-                  >
-                    {FILTER_LABELS[f] || f}
-                  </button>
-                ))}
-              </div>
-              <Slider
-                label="Frequency"
-                value={settings[freqKey]}
-                min={20}
-                max={20000}
-                scale="log"
-                fillFrom={isHighpass ? "right" : "left"}
-                onChange={(v) => update({ [freqKey]: v })}
-                format={(v) =>
-                  v >= 1000
-                    ? `${(v / 1000).toFixed(1)}kHz`
-                    : `${Math.round(v)}Hz`
-                }
-              />
-              <Slider
-                label="Quality"
-                value={settings[qKey]}
-                min={0.1}
-                max={20}
-                step={0.1}
-                onChange={(v) => update({ [qKey]: v })}
-                format={(v) => v.toFixed(1)}
-              />
-              {/* Slope (dB/octave) */}
+              {/* Wave type */}
               <div className="flex flex-col gap-1">
-                <span className="text-xs">Slope (dB/oct)</span>
+                <span className="text-xs">Wave</span>
                 <div className="grid grid-cols-4 gap-1">
-                  {FILTER_SLOPES.map((s) => (
+                  {WAVE_TYPES.map((w) => (
                     <button
-                      key={s}
+                      key={w}
                       type="button"
-                      onClick={() => update({ [slopeKey]: s })}
-                      className={`text-xs py-1 rounded border ${
-                        settings[slopeKey] === s
+                      onClick={() => update({ waveType: w })}
+                      className={`text-xs py-1 rounded border capitalize ${
+                        settings.waveType === w
                           ? "bg-primary text-bg border-primary"
                           : "border-primary text-primary hover:text-hover hover:border-hover"
                       }`}
                     >
-                      {SLOPE_LABELS[s] || s}
+                      {w}
                     </button>
                   ))}
                 </div>
               </div>
-            </Collapsible>
+
+              {/* Key: root + scale */}
+              <div className="flex gap-2">
+                <label className="flex flex-col gap-0.5 text-xs flex-1">
+                  <span>Root</span>
+                  <select
+                    value={settings.root}
+                    onChange={(e) => update({ root: e.target.value })}
+                    className="border border-primary rounded px-1 py-1 bg-bg text-primary"
+                  >
+                    {Object.keys(ROOT_NOTES).map((r) => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-col gap-0.5 text-xs flex-1">
+                  <span>Scale</span>
+                  <select
+                    value={settings.scale}
+                    onChange={(e) => update({ scale: e.target.value })}
+                    className="border border-primary rounded px-1 py-1 bg-bg text-primary"
+                  >
+                    {Object.keys(SCALES).map((s) => (
+                      <option key={s} value={s}>
+                        {SCALE_LABELS[s] || s}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              {/* Envelope (ADSR) */}
+              <Collapsible
+                title="Envelope"
+                open={layout.sections.envelope}
+                onToggle={() => toggleSection("envelope")}
+              >
+                <Slider
+                  label="Attack"
+                  value={settings.attack}
+                  min={0}
+                  max={0.5}
+                  step={0.005}
+                  onChange={(v) => update({ attack: v })}
+                  format={(v) => `${Math.round(v * 1000)}ms`}
+                />
+                <Slider
+                  label="Decay"
+                  value={settings.decay}
+                  min={0}
+                  max={1}
+                  step={0.005}
+                  onChange={(v) => update({ decay: v })}
+                  format={(v) => `${Math.round(v * 1000)}ms`}
+                />
+                <Slider
+                  label="Sustain"
+                  value={settings.sustain}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={(v) => update({ sustain: v })}
+                  format={(v) => `${Math.round(v * 100)}%`}
+                />
+                <Slider
+                  label="Release"
+                  value={settings.release}
+                  min={0}
+                  max={1}
+                  step={0.005}
+                  onChange={(v) => update({ release: v })}
+                  format={(v) => `${Math.round(v * 1000)}ms`}
+                />
+              </Collapsible>
+
+              {/* Filter */}
+              <Collapsible
+                title="Filter"
+                open={layout.sections.filter}
+                onToggle={() => toggleSection("filter")}
+              >
+                {/* Filter type tabs */}
+                <div className="flex">
+                  {FILTER_TYPES.map((f, i) => (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => update({ filterType: f })}
+                      className={`flex-1 text-xs py-1 border ${
+                        i === 0 ? "rounded-l" : "-ml-px rounded-r"
+                      } ${
+                        settings.filterType === f
+                          ? "relative z-10 bg-primary text-bg border-primary"
+                          : "border-primary text-primary hover:text-hover hover:border-hover"
+                      }`}
+                    >
+                      {FILTER_LABELS[f] || f}
+                    </button>
+                  ))}
+                </div>
+                <Slider
+                  label="Frequency"
+                  value={settings[freqKey]}
+                  min={20}
+                  max={20000}
+                  scale="log"
+                  fillFrom={isHighpass ? "right" : "left"}
+                  onChange={(v) => update({ [freqKey]: v })}
+                  format={(v) =>
+                    v >= 1000
+                      ? `${(v / 1000).toFixed(1)}kHz`
+                      : `${Math.round(v)}Hz`
+                  }
+                />
+                <Slider
+                  label="Quality"
+                  value={settings[qKey]}
+                  min={0.1}
+                  max={20}
+                  step={0.1}
+                  onChange={(v) => update({ [qKey]: v })}
+                  format={(v) => v.toFixed(1)}
+                />
+                {/* Slope (dB/octave) */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs">Slope (dB/oct)</span>
+                  <div className="grid grid-cols-4 gap-1">
+                    {FILTER_SLOPES.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => update({ [slopeKey]: s })}
+                        className={`text-xs py-1 rounded border ${
+                          settings[slopeKey] === s
+                            ? "bg-primary text-bg border-primary"
+                            : "border-primary text-primary hover:text-hover hover:border-hover"
+                        }`}
+                      >
+                        {SLOPE_LABELS[s] || s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </Collapsible>
+            </div>
+
+            {/* Power section */}
+            <div className="border-t border-primary px-3 py-2 bg-bg-dark rounded-b-lg">
+              <button
+                type="button"
+                onClick={toggleEnabled}
+                title={settings.enabled ? "Disable synth" : "Enable synth"}
+                className={`w-full flex items-center justify-center gap-2 py-1.5 rounded border text-xs ${
+                  settings.enabled
+                    ? "bg-primary text-bg border-primary"
+                    : "border-primary text-primary hover:text-hover hover:border-hover"
+                }`}
+              >
+                <i className="fa-solid fa-power-off" />
+                <span>{settings.enabled ? "Sound On" : "Sound Off"}</span>
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }

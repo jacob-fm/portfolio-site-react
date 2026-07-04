@@ -1,4 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import useSynthSettings from "../hooks/useSynthSettings";
 import {
   WAVE_TYPES,
@@ -51,10 +61,12 @@ function clampPosition(x, y, minimized) {
 
 function loadLayout() {
   const fallback = {
-    // Bubble anchored near the top-right corner (starts minimized).
-    x:
-      typeof window !== "undefined" ? window.innerWidth - BUBBLE_SIZE - 24 : 24,
-    y: 96,
+    // Bubble anchored near the bottom-left corner (starts minimized).
+    x: 24,
+    y:
+      typeof window !== "undefined"
+        ? window.innerHeight - BUBBLE_SIZE - 24
+        : 24,
     minimized: true,
     // Which accordion sections are expanded — all open by default.
     sections: { envelope: true, filter: true },
@@ -115,6 +127,97 @@ function Collapsible({ title, open, onToggle, children }) {
   );
 }
 
+// Shared tooltip timing so hovering one control "warms up" the group: the first
+// tooltip waits 1s, then moving between controls shows instantly — until the
+// cursor leaves all controls for 1s, which resets the warm-up.
+const TooltipContext = createContext(null);
+const TOOLTIP_DELAY = 1000;
+
+function TooltipProvider({ children }) {
+  const [activeId, setActiveId] = useState(null);
+  const warmRef = useRef(false);
+  const showTimer = useRef(null);
+  const cooldownTimer = useRef(null);
+
+  useEffect(
+    () => () => {
+      clearTimeout(showTimer.current);
+      clearTimeout(cooldownTimer.current);
+    },
+    [],
+  );
+
+  const requestShow = useCallback((id) => {
+    clearTimeout(cooldownTimer.current);
+    clearTimeout(showTimer.current);
+    if (warmRef.current) {
+      setActiveId(id); // already warm — show immediately
+    } else {
+      showTimer.current = setTimeout(() => {
+        warmRef.current = true;
+        setActiveId(id);
+      }, TOOLTIP_DELAY);
+    }
+  }, []);
+
+  const requestHide = useCallback((id) => {
+    clearTimeout(showTimer.current);
+    setActiveId((cur) => (cur === id ? null : cur));
+    // Reset the warm-up if nothing else gets hovered within the delay window.
+    clearTimeout(cooldownTimer.current);
+    cooldownTimer.current = setTimeout(() => {
+      warmRef.current = false;
+    }, TOOLTIP_DELAY);
+  }, []);
+
+  const value = useMemo(
+    () => ({ activeId, requestShow, requestHide }),
+    [activeId, requestShow, requestHide],
+  );
+
+  return (
+    <TooltipContext.Provider value={value}>{children}</TooltipContext.Provider>
+  );
+}
+
+// A themed tooltip that appears above its parent element (which must be
+// `relative`). It attaches hover listeners to that parent, so it stays valid
+// inside a <button>/<label> and drives visibility through the shared context.
+function TooltipBubble({ text }) {
+  const ctx = useContext(TooltipContext);
+  const id = useId();
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current?.parentElement;
+    if (!el || !ctx) return undefined;
+    const enter = () => ctx.requestShow(id);
+    const leave = () => ctx.requestHide(id);
+    el.addEventListener("mouseenter", enter);
+    el.addEventListener("mouseleave", leave);
+    return () => {
+      el.removeEventListener("mouseenter", enter);
+      el.removeEventListener("mouseleave", leave);
+    };
+  }, [ctx, id]);
+
+  const open = ctx?.activeId === id;
+
+  return (
+    <span
+      ref={ref}
+      className={`pointer-events-none absolute bottom-full left-1/2 z-50 mb-1.5 -translate-x-1/2 transition-opacity duration-150 ${
+        open ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <span className="block w-max max-w-[190px] rounded-md bg-primary px-2 py-1 text-center text-[11px] font-normal leading-snug text-bg shadow-lg">
+        {text}
+      </span>
+      <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-primary" />
+    </span>
+  );
+}
+
 // A labeled range slider row. Supports a logarithmic scale (so frequency ramps
 // up more sharply toward the right) and a fill that can start from either end.
 function Slider({
@@ -127,6 +230,7 @@ function Slider({
   format,
   scale = "linear",
   fillFrom = "left",
+  tooltip,
 }) {
   const isLog = scale === "log";
   const lmin = isLog ? Math.log(min) : 0;
@@ -151,7 +255,10 @@ function Slider({
       : `linear-gradient(to right, ${filled} ${percent}%, ${empty} ${percent}%)`;
 
   return (
-    <label className="flex flex-col gap-0.5 text-xs">
+    <label
+      className={`flex flex-col gap-0.5 text-xs ${tooltip ? "relative" : ""}`}
+    >
+      {tooltip && <TooltipBubble text={tooltip} />}
       <span className="flex justify-between text-primary">
         <span>{label}</span>
         <span className="tabular-nums text-stone-500">{format(value)}</span>
@@ -180,6 +287,7 @@ export default function SynthControlPanel() {
   const calloutTimer = useRef(null);
   const hasExpandedRef = useRef(false);
   const layoutRef = useRef(layout);
+  const panelRef = useRef(null);
 
   // Keep a ref to the latest layout so the resize handler can read it without
   // doing stateful work inside a setState updater (which StrictMode double-runs).
@@ -229,6 +337,31 @@ export default function SynthControlPanel() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // After minimizing/expanding, clamp the element fully on-screen using its real
+  // measured size (the expanded panel is far taller than the bubble, so a
+  // bottom-corner bubble would otherwise open off the bottom/left edge).
+  useLayoutEffect(() => {
+    const el = panelRef.current;
+    if (!el || el.offsetHeight === 0) return; // hidden (mobile) — skip
+    const margin = 8;
+    const maxX = Math.max(margin, window.innerWidth - el.offsetWidth - margin);
+    const maxY = Math.max(
+      margin,
+      window.innerHeight - el.offsetHeight - margin,
+    );
+    const x = Math.min(Math.max(margin, layout.x), maxX);
+    const y = Math.min(Math.max(margin, layout.y), maxY);
+    if (x !== layout.x || y !== layout.y) {
+      setLayout((l) => {
+        const next = { ...l, x, y };
+        saveLayout(next);
+        return next;
+      });
+    }
+    // Only re-clamp when the minimized state flips, using the size at that time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layout.minimized]);
 
   // Show the centered "move the cursor" hint, fading it out after 5 seconds.
   const triggerCallout = () => {
@@ -332,8 +465,24 @@ export default function SynthControlPanel() {
   const qKey = isHighpass ? "highpassQ" : "lowpassQ";
   const slopeKey = isHighpass ? "highpassSlope" : "lowpassSlope";
 
+  // Place the load hint on the bubble's center-facing side so it stays visible
+  // wherever the bubble sits, with the arrow pointing back toward the bubble.
+  const vw = typeof window !== "undefined" ? window.innerWidth : 0;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 0;
+  const bubbleOnLeft = layout.x + BUBBLE_SIZE / 2 < vw / 2;
+  const bubbleOnTop = layout.y + BUBBLE_SIZE / 2 < vh / 2;
+  const hint = {
+    box: `${bubbleOnTop ? "top-full mt-2" : "bottom-full mb-2"} ${
+      bubbleOnLeft ? "left-0" : "right-0"
+    }`,
+    enter: bubbleOnTop ? "-translate-y-2" : "translate-y-2",
+    arrow: `${
+      bubbleOnTop ? "bottom-full border-b-primary" : "top-full border-t-primary"
+    } ${bubbleOnLeft ? "left-4" : "right-4"}`,
+  };
+
   return (
-    <>
+    <TooltipProvider>
       {/* Centered "move the cursor" hint, shown briefly on enable / first open */}
       <div
         className={`hidden md:flex fixed inset-0 z-40 items-center justify-center pointer-events-none transition-opacity ${
@@ -346,31 +495,33 @@ export default function SynthControlPanel() {
       </div>
 
       <div
+        ref={panelRef}
         className="hidden md:block fixed z-30"
         style={{ left: layout.x, top: layout.y }}
       >
         {layout.minimized ? (
           <div className="relative">
-            {/* "Make some noise!" hint sliding out of the bubble on load */}
+            {/* "Make some noise!" hint, placed toward screen center on load */}
             {loadHintMounted && (
               <div
-                className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none transition-all duration-500 ${
+                className={`absolute ${hint.box} pointer-events-none transition-all duration-500 ${
                   showLoadHint
                     ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-2"
+                    : `opacity-0 ${hint.enter}`
                 }`}
               >
                 <div className="whitespace-nowrap rounded-lg bg-primary text-bg text-xl px-13 py-4 shadow-lg">
                   Make some noise!
                 </div>
-                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary" />
+                <div
+                  className={`absolute ${hint.arrow} border-4 border-transparent`}
+                />
               </div>
             )}
             <button
               type="button"
               {...dragHandlers}
-              title="Open hover synth"
-              className="cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
+              className="relative cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
             >
               <i className="fa-solid fa-wave-square" />
             </button>
@@ -388,19 +539,19 @@ export default function SynthControlPanel() {
                   type="button"
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={reset}
-                  title="Reset to defaults"
-                  className="cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+                  className="relative cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
                 >
                   <i className="fa-solid fa-rotate-left" />
+                  <TooltipBubble text="Reset to defaults" />
                 </button>
                 <button
                   type="button"
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => setMinimized(true)}
-                  title="Minimize"
-                  className="cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+                  className="relative cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
                 >
                   <i className="fa-solid fa-minus" />
+                  <TooltipBubble text="Minimize" />
                 </button>
               </div>
             </div>
@@ -423,7 +574,8 @@ export default function SynthControlPanel() {
               />
 
               {/* Wave type */}
-              <div className="flex flex-col gap-1">
+              <div className="relative flex flex-col gap-1">
+                <TooltipBubble text="The basic character of the tone" />
                 <span className="text-xs">Wave</span>
                 <div className="grid grid-cols-4 gap-1">
                   {WAVE_TYPES.map((w) => (
@@ -445,7 +597,7 @@ export default function SynthControlPanel() {
 
               {/* Key: root + scale */}
               <div className="flex gap-2">
-                <label className="flex flex-col gap-0.5 text-xs flex-1">
+                <label className="relative flex flex-col gap-0.5 text-xs flex-1">
                   <span>Root</span>
                   <select
                     value={settings.root}
@@ -459,7 +611,7 @@ export default function SynthControlPanel() {
                     ))}
                   </select>
                 </label>
-                <label className="flex flex-col gap-0.5 text-xs flex-1">
+                <label className="relative flex flex-col gap-0.5 text-xs flex-1">
                   <span>Scale</span>
                   <select
                     value={settings.scale}
@@ -489,6 +641,7 @@ export default function SynthControlPanel() {
                   step={0.005}
                   onChange={(v) => update({ attack: v })}
                   format={(v) => `${Math.round(v * 1000)}ms`}
+                  tooltip="How quickly each sound fades in when it starts — low is an instant hit, high eases in gently"
                 />
                 <Slider
                   label="Decay"
@@ -498,6 +651,7 @@ export default function SynthControlPanel() {
                   step={0.005}
                   onChange={(v) => update({ decay: v })}
                   format={(v) => `${Math.round(v * 1000)}ms`}
+                  tooltip="How quickly the sound drops from its initial peak down to the held level"
                 />
                 <Slider
                   label="Sustain"
@@ -507,6 +661,7 @@ export default function SynthControlPanel() {
                   step={0.01}
                   onChange={(v) => update({ sustain: v })}
                   format={(v) => `${Math.round(v * 100)}%`}
+                  tooltip="How loud the sound stays after the initial hit, for as long as it's held"
                 />
                 <Slider
                   label="Release"
@@ -516,6 +671,7 @@ export default function SynthControlPanel() {
                   step={0.005}
                   onChange={(v) => update({ release: v })}
                   format={(v) => `${Math.round(v * 1000)}ms`}
+                  tooltip="How long the sound takes to fade away after it ends"
                 />
               </Collapsible>
 
@@ -532,15 +688,22 @@ export default function SynthControlPanel() {
                       key={f}
                       type="button"
                       onClick={() => update({ filterType: f })}
-                      className={`cursor-pointer flex-1 text-xs py-1 border ${
+                      className={`relative cursor-pointer flex-1 text-xs py-1 border ${
                         i === 0 ? "rounded-l" : "-ml-px rounded-r"
                       } ${
                         settings.filterType === f
-                          ? "relative z-10 bg-primary text-bg border-primary"
+                          ? "z-10 bg-primary text-bg border-primary"
                           : "border-primary text-primary hover:text-hover hover:border-hover"
                       }`}
                     >
                       {FILTER_LABELS[f] || f}
+                      <TooltipBubble
+                        text={
+                          f === "lowpass"
+                            ? "Filter out everything ABOVE the set frequency"
+                            : "Filter out everything BELOW the set frequency"
+                        }
+                      />
                     </button>
                   ))}
                 </div>
@@ -557,6 +720,7 @@ export default function SynthControlPanel() {
                       ? `${(v / 1000).toFixed(1)}kHz`
                       : `${Math.round(v)}Hz`
                   }
+                  tooltip="The cutoff point where the filter takes effect — sets how bright or muffled the sound is"
                 />
                 <Slider
                   label="Quality"
@@ -566,9 +730,11 @@ export default function SynthControlPanel() {
                   step={0.1}
                   onChange={(v) => update({ [qKey]: v })}
                   format={(v) => v.toFixed(1)}
+                  tooltip="Emphasizes the sound right around the cutoff point, adding a sharper, more resonant edge"
                 />
                 {/* Slope (dB/octave) */}
-                <div className="flex flex-col gap-1">
+                <div className="relative flex flex-col gap-1">
+                  <TooltipBubble text="How sharply the filter cuts past the cutoff" />
                   <span className="text-xs">Slope (dB/oct)</span>
                   <div className="grid grid-cols-4 gap-1">
                     {FILTER_SLOPES.map((s) => (
@@ -595,8 +761,7 @@ export default function SynthControlPanel() {
               <button
                 type="button"
                 onClick={toggleEnabled}
-                title={settings.enabled ? "Disable synth" : "Enable synth"}
-                className={`cursor-pointer w-full flex items-center justify-center gap-2 py-1.5 rounded border text-xs ${
+                className={`relative cursor-pointer w-full flex items-center justify-center gap-2 py-1.5 rounded border text-xs ${
                   settings.enabled
                     ? "bg-primary text-bg border-primary"
                     : "border-primary text-primary hover:text-hover hover:border-hover"
@@ -609,6 +774,6 @@ export default function SynthControlPanel() {
           </div>
         )}
       </div>
-    </>
+    </TooltipProvider>
   );
 }

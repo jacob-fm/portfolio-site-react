@@ -48,7 +48,7 @@ export const SCALES = {
 };
 
 const DEFAULT_SETTINGS = {
-  enabled: true,
+  enabled: false,
   waveType: "triangle",
   volume: 0.3,
   attack: 0.005, // seconds, 0 → peak
@@ -72,14 +72,14 @@ const DEFAULT_SETTINGS = {
 const SUSTAIN_HOLD = 0.06;
 
 function loadSettings() {
-  // Always start enabled: the synth loads on (but minimized in the panel).
-  // Browsers block audio until a user gesture, so installAudioUnlock() resumes
-  // the context on the first interaction. Other settings restore from storage.
+  // Always start disabled: the user turns the synth on with the panel toggle,
+  // which is also the gesture that unlocks audio. Other settings restore from
+  // storage.
   if (typeof localStorage === "undefined") return { ...DEFAULT_SETTINGS };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_SETTINGS };
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw), enabled: true };
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw), enabled: false };
   } catch {
     return { ...DEFAULT_SETTINGS };
   }

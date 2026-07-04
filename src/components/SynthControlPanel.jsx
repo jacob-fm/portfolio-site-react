@@ -101,7 +101,7 @@ function Collapsible({ title, open, onToggle, children }) {
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between text-xs font-heading text-primary py-0.5 hover:text-hover"
+        className="cursor-pointer w-full flex items-center justify-between text-xs font-heading text-primary py-0.5 hover:text-hover"
       >
         <span>{title}</span>
         <i
@@ -174,6 +174,8 @@ export default function SynthControlPanel() {
   const [settings, update, reset] = useSynthSettings();
   const [layout, setLayout] = useState(loadLayout);
   const [showCallout, setShowCallout] = useState(false);
+  const [showLoadHint, setShowLoadHint] = useState(false);
+  const [loadHintMounted, setLoadHintMounted] = useState(true);
   const dragRef = useRef(null);
   const calloutTimer = useRef(null);
   const hasExpandedRef = useRef(false);
@@ -186,6 +188,19 @@ export default function SynthControlPanel() {
   });
 
   useEffect(() => () => clearTimeout(calloutTimer.current), []);
+
+  // On page load, slide a "Make some noise!" hint out of the minimized bubble,
+  // then unmount it so it can never reappear when the panel is re-minimized.
+  useEffect(() => {
+    const showT = setTimeout(() => setShowLoadHint(true), 400);
+    const hideT = setTimeout(() => setShowLoadHint(false), 3000);
+    const unmountT = setTimeout(() => setLoadHintMounted(false), 3600);
+    return () => {
+      clearTimeout(showT);
+      clearTimeout(hideT);
+      clearTimeout(unmountT);
+    };
+  }, []);
 
   // On resize/zoom, keep the panel at the same fractional position (rather than
   // a fixed pixel offset that drifts toward center as the viewport grows).
@@ -245,6 +260,9 @@ export default function SynthControlPanel() {
     });
 
   const setMinimized = (minimized) => {
+    // Expanding dismisses the load hint for good — it only shows on first load,
+    // never when the user later re-minimizes the panel.
+    if (!minimized) setLoadHintMounted(false);
     // Show the hint the first time the panel is expanded after page load.
     if (!minimized && !hasExpandedRef.current) {
       hasExpandedRef.current = true;
@@ -332,14 +350,31 @@ export default function SynthControlPanel() {
         style={{ left: layout.x, top: layout.y }}
       >
         {layout.minimized ? (
-          <button
-            type="button"
-            {...dragHandlers}
-            title="Open hover synth"
-            className="cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
-          >
-            <i className="fa-solid fa-wave-square" />
-          </button>
+          <div className="relative">
+            {/* "Make some noise!" hint sliding out of the bubble on load */}
+            {loadHintMounted && (
+              <div
+                className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none transition-all duration-500 ${
+                  showLoadHint
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-2"
+                }`}
+              >
+                <div className="whitespace-nowrap rounded-lg bg-primary text-bg text-xl px-13 py-4 shadow-lg">
+                  Make some noise!
+                </div>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary" />
+              </div>
+            )}
+            <button
+              type="button"
+              {...dragHandlers}
+              title="Open hover synth"
+              className="cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
+            >
+              <i className="fa-solid fa-wave-square" />
+            </button>
+          </div>
         ) : (
           <div className="w-72 bg-bg border border-primary rounded-lg shadow-xl text-primary select-none">
             {/* Header / drag handle */}
@@ -354,7 +389,7 @@ export default function SynthControlPanel() {
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={reset}
                   title="Reset to defaults"
-                  className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+                  className="cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
                 >
                   <i className="fa-solid fa-rotate-left" />
                 </button>
@@ -363,7 +398,7 @@ export default function SynthControlPanel() {
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => setMinimized(true)}
                   title="Minimize"
-                  className="w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+                  className="cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
                 >
                   <i className="fa-solid fa-minus" />
                 </button>
@@ -396,7 +431,7 @@ export default function SynthControlPanel() {
                       key={w}
                       type="button"
                       onClick={() => update({ waveType: w })}
-                      className={`text-xs py-1 rounded border capitalize ${
+                      className={`cursor-pointer text-xs py-1 rounded border capitalize ${
                         settings.waveType === w
                           ? "bg-primary text-bg border-primary"
                           : "border-primary text-primary hover:text-hover hover:border-hover"
@@ -415,7 +450,7 @@ export default function SynthControlPanel() {
                   <select
                     value={settings.root}
                     onChange={(e) => update({ root: e.target.value })}
-                    className="border border-primary rounded px-1 py-1 bg-bg text-primary"
+                    className="cursor-pointer border border-primary rounded px-1 py-1 bg-bg text-primary"
                   >
                     {Object.keys(ROOT_NOTES).map((r) => (
                       <option key={r} value={r}>
@@ -429,7 +464,7 @@ export default function SynthControlPanel() {
                   <select
                     value={settings.scale}
                     onChange={(e) => update({ scale: e.target.value })}
-                    className="border border-primary rounded px-1 py-1 bg-bg text-primary"
+                    className="cursor-pointer border border-primary rounded px-1 py-1 bg-bg text-primary"
                   >
                     {Object.keys(SCALES).map((s) => (
                       <option key={s} value={s}>
@@ -497,7 +532,7 @@ export default function SynthControlPanel() {
                       key={f}
                       type="button"
                       onClick={() => update({ filterType: f })}
-                      className={`flex-1 text-xs py-1 border ${
+                      className={`cursor-pointer flex-1 text-xs py-1 border ${
                         i === 0 ? "rounded-l" : "-ml-px rounded-r"
                       } ${
                         settings.filterType === f
@@ -541,7 +576,7 @@ export default function SynthControlPanel() {
                         key={s}
                         type="button"
                         onClick={() => update({ [slopeKey]: s })}
-                        className={`text-xs py-1 rounded border ${
+                        className={`cursor-pointer text-xs py-1 rounded border ${
                           settings[slopeKey] === s
                             ? "bg-primary text-bg border-primary"
                             : "border-primary text-primary hover:text-hover hover:border-hover"
@@ -561,7 +596,7 @@ export default function SynthControlPanel() {
                 type="button"
                 onClick={toggleEnabled}
                 title={settings.enabled ? "Disable synth" : "Enable synth"}
-                className={`w-full flex items-center justify-center gap-2 py-1.5 rounded border text-xs ${
+                className={`cursor-pointer w-full flex items-center justify-center gap-2 py-1.5 rounded border text-xs ${
                   settings.enabled
                     ? "bg-primary text-bg border-primary"
                     : "border-primary text-primary hover:text-hover hover:border-hover"

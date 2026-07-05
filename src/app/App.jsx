@@ -74,7 +74,7 @@ function App() {
   const [featured, ...rest] = thumbnails;
 
   return (
-    <div className="relative md:px-50">
+    <div className="relative md:px-50 md:mb-8">
       {/* Desktop: top-right corner */}
       {hasBlogPosts && (
         <div className="hidden md:block fixed top-14 right-24 z-20">

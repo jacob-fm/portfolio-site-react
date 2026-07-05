@@ -123,7 +123,7 @@ function App() {
         <Link to={featured.route}>
           <div
             onMouseEnter={() => playHoverNote(0)}
-            className="border border-solid border-primary shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col lg:flex-row"
+            className="group border border-solid border-primary hover:border-hover shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col lg:flex-row"
           >
             <div className="lg:w-2/3 h-64 lg:h-120">
               <img
@@ -131,13 +131,13 @@ function App() {
                 className="object-cover h-full w-full"
               />
             </div>
-            <div className="lg:w-1/3 flex flex-col items-center justify-center bg-bg text-primary p-6">
+            <div className="lg:w-1/3 flex flex-col items-center justify-center bg-bg text-primary group-hover:text-hover transition-colors duration-200 p-6">
               <h2 className="text-2xl font-heading mb-3">{featured.title}</h2>
               <div className="flex flex-wrap gap-1.5">
                 {featured.badges?.map((b, idx) => (
                   <span
                     key={idx}
-                    className="text-xs px-1 border border-primary rounded-lg"
+                    className="text-xs px-1 border border-primary group-hover:border-hover rounded-lg transition-colors duration-200"
                   >
                     {b}
                   </span>

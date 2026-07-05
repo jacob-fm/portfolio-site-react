@@ -149,9 +149,9 @@ function loadLayout() {
     const raw = localStorage.getItem(LAYOUT_KEY);
     if (!raw) return fallback;
     const parsed = JSON.parse(raw);
-    // Always start minimized. If the stored state was expanded, shift x so the
-    // bubble lands where the panel's top-right (minimize button) was — keeping
-    // the position consistent for when it's expanded again.
+    // Always start minimized. We can't know across a reload whether the panel
+    // was moved, so if the stored state was expanded, shift x to the panel's
+    // top-right (minimize button) — the same spot a moved panel collapses to.
     let x = parsed.x ?? fallback.x;
     if (parsed.minimized === false) x += PANEL_WIDTH - BUBBLE_SIZE;
     // Clamp to the current viewport (starts minimized, so use the bubble size).
@@ -360,6 +360,10 @@ export default function SynthControlPanel() {
   const calloutTimer = useRef(null);
   const layoutRef = useRef(layout);
   const panelRef = useRef(null);
+  // The bubble's position just before expanding, so minimizing can return there
+  // — unless the panel was dragged (tracked below), which collapses to the button.
+  const preExpandPos = useRef(null);
+  const movedWhileExpanded = useRef(false);
 
   // Keep a ref to the latest layout so the resize handler can read it without
   // doing stateful work inside a setState updater (which StrictMode double-runs).
@@ -469,12 +473,23 @@ export default function SynthControlPanel() {
     // never when the user later re-minimizes the panel.
     if (!minimized) setLoadHintMounted(false);
     setLayout((l) => {
-      // Anchor the top-right corner across the toggle so the minimized bubble
-      // lands where the minimize button was (under the cursor), and expanding
-      // restores the panel to its original spot.
       const dx = PANEL_WIDTH - BUBBLE_SIZE;
-      const x = minimized ? l.x + dx : l.x - dx;
-      const next = { ...l, minimized, x };
+      let { x, y } = l;
+      if (!minimized) {
+        // Expanding: remember where the bubble sat so minimizing can restore it,
+        // and open the panel growing left so its top-right meets the bubble.
+        preExpandPos.current = { x: l.x, y: l.y };
+        movedWhileExpanded.current = false;
+        x = l.x - dx;
+      } else if (movedWhileExpanded.current || !preExpandPos.current) {
+        // Minimizing a panel the user dragged: collapse to the minimize button
+        // (the panel's top-right corner), like before.
+        x = l.x + dx;
+      } else {
+        // Minimizing an untouched panel: return to the pre-expand bubble spot.
+        ({ x, y } = preExpandPos.current);
+      }
+      const next = { ...l, minimized, x, y };
       saveLayout(next);
       return next;
     });
@@ -515,6 +530,8 @@ export default function SynthControlPanel() {
       saveLayout(l);
       return l;
     });
+    // Remember a drag of the expanded panel so minimizing collapses to the button.
+    if (d.moved && !layout.minimized) movedWhileExpanded.current = true;
     // A press without movement on the minimized bubble = tap to expand.
     if (!d.moved && layout.minimized) setMinimized(false);
   };

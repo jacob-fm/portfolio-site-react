@@ -821,7 +821,9 @@ export default function SynthControlPanel() {
                 }`}
               >
                 <i className="fa-solid fa-power-off" />
-                <span>{settings.enabled ? "Sound On" : "Sound Off"}</span>
+                <span>
+                  {settings.enabled ? "Disable Sound" : "Enable Sound"}
+                </span>
               </button>
             </div>
           </div>

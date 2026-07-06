@@ -20,7 +20,11 @@ import {
 
 const LAYOUT_KEY = "hoverSynthLayout";
 const PANEL_WIDTH = 288; // matches w-72
-const BUBBLE_SIZE = 44; // matches w-11 (minimized circle)
+const BUBBLE_SIZE = 44; // matches h-11 (minimized pill height)
+// Approximate width of the minimized "Make some noise!" pill. Used for edge
+// clamping and expand/minimize offsets; a layout effect re-clamps with the real
+// measured width afterward, so a rough value here is fine.
+const BUBBLE_WIDTH = 190;
 // Actual gain cap — kept low so it isn't too loud. Displayed to the user as
 // 100% (the slider shows a percentage of this range, not raw gain).
 const MAX_VOLUME = 0.6;
@@ -44,25 +48,6 @@ const SLOPE_LABELS = {
   48: "48",
   96: "Wall",
 };
-
-// Given an anchor point, return Tailwind classes placing a callout on its
-// center-facing side, with the arrow pointing back toward the anchor. Used by
-// both the load hint (anchored to the bubble) and the cursor callout.
-function calloutPlacement(pointX, pointY) {
-  const vw = typeof window !== "undefined" ? window.innerWidth : 0;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 0;
-  const onLeft = pointX < vw / 2;
-  const onTop = pointY < vh / 2;
-  return {
-    box: `${onTop ? "top-full mt-2" : "bottom-full mb-2"} ${
-      onLeft ? "left-0" : "right-0"
-    }`,
-    enter: onTop ? "-translate-y-2" : "translate-y-2",
-    arrow: `${
-      onTop ? "bottom-full border-b-primary" : "top-full border-t-primary"
-    } ${onLeft ? "left-4" : "right-4"}`,
-  };
-}
 
 // Track the cursor globally so a callout can appear at the last-known position
 // even before the first mousemove after it's shown.
@@ -122,7 +107,7 @@ function CursorCallout({ show, text }) {
 // (e.g. a position saved on a wider window then loaded on a smaller display).
 function clampPosition(x, y, minimized) {
   if (typeof window === "undefined") return { x, y };
-  const width = minimized ? BUBBLE_SIZE : PANEL_WIDTH;
+  const width = minimized ? BUBBLE_WIDTH : PANEL_WIDTH;
   const margin = 8;
   const maxX = Math.max(margin, window.innerWidth - width - margin);
   const maxY = Math.max(margin, window.innerHeight - BUBBLE_SIZE - margin);
@@ -153,7 +138,7 @@ function loadLayout() {
     // was moved, so if the stored state was expanded, shift x to the panel's
     // top-right (minimize button) — the same spot a moved panel collapses to.
     let x = parsed.x ?? fallback.x;
-    if (parsed.minimized === false) x += PANEL_WIDTH - BUBBLE_SIZE;
+    if (parsed.minimized === false) x += PANEL_WIDTH - BUBBLE_WIDTH;
     // Clamp to the current viewport (starts minimized, so use the bubble size).
     const clamped = clampPosition(x, parsed.y ?? fallback.y, true);
     return {
@@ -354,8 +339,6 @@ export default function SynthControlPanel() {
   const [settings, update, reset] = useSynthSettings();
   const [layout, setLayout] = useState(loadLayout);
   const [showCallout, setShowCallout] = useState(false);
-  const [showLoadHint, setShowLoadHint] = useState(false);
-  const [loadHintMounted, setLoadHintMounted] = useState(true);
   const dragRef = useRef(null);
   const calloutTimer = useRef(null);
   const layoutRef = useRef(layout);
@@ -373,26 +356,13 @@ export default function SynthControlPanel() {
 
   useEffect(() => () => clearTimeout(calloutTimer.current), []);
 
-  // On page load, slide a "Make some noise!" hint out of the minimized bubble,
-  // then unmount it so it can never reappear when the panel is re-minimized.
-  useEffect(() => {
-    const showT = setTimeout(() => setShowLoadHint(true), 400);
-    const hideT = setTimeout(() => setShowLoadHint(false), 3000);
-    const unmountT = setTimeout(() => setLoadHintMounted(false), 3600);
-    return () => {
-      clearTimeout(showT);
-      clearTimeout(hideT);
-      clearTimeout(unmountT);
-    };
-  }, []);
-
   // On resize/zoom, keep the panel at the same fractional position (rather than
   // a fixed pixel offset that drifts toward center as the viewport grows).
   useEffect(() => {
     let prev = { w: window.innerWidth, h: window.innerHeight };
     const onResize = () => {
       const l = layoutRef.current;
-      const width = l.minimized ? BUBBLE_SIZE : PANEL_WIDTH;
+      const width = l.minimized ? BUBBLE_WIDTH : PANEL_WIDTH;
       // Available space = viewport minus the element; scale x/y by its change.
       const oldAvailW = Math.max(1, prev.w - width);
       const newAvailW = Math.max(1, window.innerWidth - width);
@@ -469,11 +439,8 @@ export default function SynthControlPanel() {
     });
 
   const setMinimized = (minimized) => {
-    // Expanding dismisses the load hint for good — it only shows on first load,
-    // never when the user later re-minimizes the panel.
-    if (!minimized) setLoadHintMounted(false);
     setLayout((l) => {
-      const dx = PANEL_WIDTH - BUBBLE_SIZE;
+      const dx = PANEL_WIDTH - BUBBLE_WIDTH;
       let { x, y } = l;
       if (!minimized) {
         // Expanding: remember where the bubble sat so minimizing can restore it,
@@ -549,13 +516,6 @@ export default function SynthControlPanel() {
   const qKey = isHighpass ? "highpassQ" : "lowpassQ";
   const slopeKey = isHighpass ? "highpassSlope" : "lowpassSlope";
 
-  // Place the load hint on the bubble's center-facing side so it stays visible
-  // wherever the bubble sits, with the arrow pointing back toward the bubble.
-  const hint = calloutPlacement(
-    layout.x + BUBBLE_SIZE / 2,
-    layout.y + BUBBLE_SIZE / 2,
-  );
-
   return (
     <TooltipProvider>
       {/* "Move the cursor" hint that points at and follows the cursor */}
@@ -570,32 +530,16 @@ export default function SynthControlPanel() {
         style={{ left: layout.x, top: layout.y }}
       >
         {layout.minimized ? (
-          <div className="relative">
-            {/* "Make some noise!" hint, placed toward screen center on load */}
-            {loadHintMounted && (
-              <div
-                className={`absolute ${hint.box} pointer-events-none transition-all duration-500 ${
-                  showLoadHint
-                    ? "opacity-100 translate-y-0"
-                    : `opacity-0 ${hint.enter}`
-                }`}
-              >
-                <div className="whitespace-nowrap rounded-lg bg-primary text-bg text-xl px-13 py-4 shadow-lg">
-                  Make some noise!
-                </div>
-                <div
-                  className={`absolute ${hint.arrow} border-4 border-transparent`}
-                />
-              </div>
-            )}
-            <button
-              type="button"
-              {...dragHandlers}
-              className="relative cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
-            >
-              <i className="fa-solid fa-wave-square" />
-            </button>
-          </div>
+          <button
+            type="button"
+            {...dragHandlers}
+            className="relative cursor-grab active:cursor-grabbing h-11 flex items-center gap-2 px-4 rounded-full bg-bg border border-primary text-primary shadow-lg hover:text-hover hover:border-hover"
+          >
+            <i className="fa-solid fa-wave-square" />
+            <span className="whitespace-nowrap font-heading text-md">
+              Make some noise!
+            </span>
+          </button>
         ) : (
           <div className="w-72 bg-bg border border-primary rounded-lg shadow-xl text-primary select-none">
             {/* Header / drag handle */}
@@ -632,6 +576,9 @@ export default function SynthControlPanel() {
                 settings.enabled ? "" : "opacity-50"
               }`}
             >
+              <span className="text-center">
+                Move the cursor around to play!
+              </span>
               {/* Volume */}
               <Slider
                 label="Volume"

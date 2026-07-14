@@ -19,13 +19,15 @@ export default function PointCloudParties() {
       </div>
       {/* description */}
       <div className="flex flex-col gap-3">
-        {/* TODO: link point clouds */}
         <p>
           In 2026 I bought an Xbox Kinect camera for $25 from a guy on
           Craigslist. Using TouchDesigner, I started experimenting with the
-          Kinect's infrared sensor to capture real-time point clouds of
-          partygoers, applying various effects, and then projecting the output
-          on walls surrounding a dance floor.
+          Kinect's infrared sensor to capture real-time{" "}
+          <a href="https://en.wikipedia.org/wiki/Point_cloud" target="_blank">
+            point clouds
+          </a>{" "}
+          of partygoers, applying various effects, and then projecting the
+          output on walls surrounding a dance floor.
         </p>
         <p>
           Later, I combined this setup with live VJing using Resolume Arena to
@@ -35,6 +37,16 @@ export default function PointCloudParties() {
           signal such as audio input or a song's tempo.
         </p>
       </div>
+      <figure>
+        <img src="/media/pointcloud/TD_network.png" />
+        <figcaption>Screenshot of my TouchDesigner network</figcaption>
+      </figure>
+      <figure>
+        <img src="/media/pointcloud/ui_window.png" />
+        <figcaption>
+          The UI panel I created in TD to use during performances
+        </figcaption>
+      </figure>
       {/* masonry layout */}
       <div className="mt-6 mx-auto columns-[360px] gap-2">
         {images.slice(1).map((image) => (

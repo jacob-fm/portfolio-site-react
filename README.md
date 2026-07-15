@@ -9,13 +9,13 @@ Created with Vite and React.
 Run the scaffolding script with the project's title in quotes:
 
 ```bash
-node scripts/new-project.mjs "My Cool Project"
+npm run new-project -- "My Cool Project"
 ```
 
-This creates `src/routes/projects/MyCoolProject.jsx`, registers a `/my-cool-project` route in `src/app/main.jsx`, and appends an entry to the thumbnails array in `src/app/App.jsx`. Afterwards, fill in the page content and set the thumbnail image and badges (marked with `TODO` comments).
+This creates `src/routes/projects/MyCoolProject.jsx`, registers a `/my-cool-project` route in `src/app/main.jsx`, appends an entry to the thumbnails array in `src/app/App.jsx`, and creates a media folder at `public/media/my-cool-project/`. Afterwards, fill in the page content and set the thumbnail image and badges (marked with `TODO` comments).
 
-The component name and route are derived from the title, or can be overridden:
+The component name, route, and media folder are derived from the title, or can be overridden:
 
 ```bash
-node scripts/new-project.mjs "My Cool Project" --name CoolProj --route cool
+npm run new-project -- "My Cool Project" --name CoolProj --route cool --media cool
 ```

@@ -3,14 +3,16 @@
 //   1. Creates src/routes/projects/<Name>.jsx
 //   2. Adds an import + route to src/app/main.jsx
 //   3. Adds an entry to the thumbnails array in src/app/App.jsx
+//   4. Creates a media folder at public/media/<folder>
 //
 // Usage:
 //   node scripts/new-project.mjs "My Cool Project"
-//   node scripts/new-project.mjs "My Cool Project" --name CoolProj --route cool
+//   node scripts/new-project.mjs "My Cool Project" --name CoolProj --route cool --media cool
 //
 // Options:
 //   --name  <PascalCase>   component/file name (default: title in PascalCase)
 //   --route <kebab-case>   route path, no leading slash (default: title in kebab-case)
+//   --media <folder>       media folder name (default: title in kebab-case)
 
 import fs from "node:fs";
 import path from "node:path";
@@ -31,10 +33,12 @@ const args = process.argv.slice(2);
 let title = null;
 let name = null;
 let route = null;
+let media = null;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--name") name = args[++i];
   else if (args[i] === "--route") route = args[++i];
+  else if (args[i] === "--media") media = args[++i];
   else if (title === null) title = args[i];
   else fail(`unexpected argument "${args[i]}" (did you forget quotes around the title?)`);
 }
@@ -53,14 +57,16 @@ if (words.length === 0 || words[0] === "") fail("title has no usable characters"
 if (!name) {
   name = words.map((w) => w[0].toUpperCase() + w.slice(1)).join("");
 }
-if (!route) {
-  route = words.join("-").toLowerCase();
-}
+const kebab = words.join("-").toLowerCase();
+if (!route) route = kebab;
 route = route.replace(/^\//, "");
+if (!media) media = kebab;
 
 if (!/^[A-Za-z][A-Za-z0-9]*$/.test(name)) fail(`invalid component name "${name}"`);
+if (!/^[A-Za-z0-9._-]+$/.test(media)) fail(`invalid media folder name "${media}"`);
 
 const componentPath = path.join(projectsDir, `${name}.jsx`);
+const mediaDir = path.join(root, "public", "media", media);
 const jsTitle = title.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
 // --- preflight checks ---
@@ -113,7 +119,7 @@ if (thumbsClose === -1) fail('couldn\'t find "];" closing the thumbnails array i
 const thumbEntry = `  {
       title: "${jsTitle}",
       route: "/${route}",
-      image: "/media/placeholder.png", // TODO: add a thumbnail image
+      image: "/media/${media}/thumbnail.png", // TODO: add a thumbnail image
       badges: [], // TODO: add badges
     },
   `;
@@ -121,7 +127,15 @@ app = app.slice(0, thumbsClose) + thumbEntry + app.slice(thumbsClose);
 
 fs.writeFileSync(appPath, app);
 
+// --- 4. media folder ---
+if (fs.existsSync(mediaDir)) {
+  console.warn(`Note: ${path.relative(root, mediaDir)} already exists, skipping`);
+} else {
+  fs.mkdirSync(mediaDir);
+}
+
 console.log(`Created ${path.relative(root, componentPath)}`);
 console.log(`Added import and route "/${route}" to src/app/main.jsx`);
 console.log(`Added thumbnail entry (end of list) to src/app/App.jsx`);
+console.log(`Created media folder ${path.relative(root, mediaDir)}`);
 console.log("\nTODO: set the thumbnail image and badges in App.jsx");

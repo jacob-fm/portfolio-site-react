@@ -69,6 +69,12 @@ function App() {
       image: "/media/misc_thumbnail.png",
       badges: ["Brand Design"],
     },
+    {
+      title: "New Matrix Group",
+      route: "/new-matrix-group",
+      image: "/media/new-matrix-group/thumbnail.png",
+      badges: [], // TODO: add badges
+    },
   ];
 
   const [featured, ...rest] = thumbnails;

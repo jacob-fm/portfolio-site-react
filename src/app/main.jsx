@@ -16,6 +16,7 @@ import Blog from "../routes/Blog.jsx";
 import BlogPost from "../routes/BlogPost.jsx";
 import Strudel from "../routes/Strudel.jsx";
 import Umbral from "../routes/projects/Umbral.jsx";
+import NewMatrixGroup from "../routes/projects/NewMatrixGroup.jsx";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
   {
     path: "/strudel",
     element: <Strudel />,
+  },
+  {
+    path: "/new-matrix-group",
+    element: <NewMatrixGroup />,
   },
 ]);
 

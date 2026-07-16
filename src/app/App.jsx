@@ -64,16 +64,16 @@ function App() {
       badges: ["Brand Design", "Logo Design"],
     },
     {
-      title: "Miscellaneous Design Work",
-      route: "/misc-design",
-      image: "/media/misc_thumbnail.png",
-      badges: ["Brand Design"],
-    },
-    {
       title: "New Matrix Group",
       route: "/new-matrix-group",
       image: "/media/new-matrix-group/thumbnail.png",
       badges: [], // TODO: add badges
+    },
+    {
+      title: "Miscellaneous Design Work",
+      route: "/misc-design",
+      image: "/media/misc_thumbnail.png",
+      badges: ["Brand Design"],
     },
   ];
 

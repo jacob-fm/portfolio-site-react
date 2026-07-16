@@ -67,7 +67,7 @@ function App() {
       title: "New Matrix Group",
       route: "/new-matrix-group",
       image: "/media/new-matrix-group/thumbnail.png",
-      badges: [], // TODO: add badges
+      badges: ["Brand Design", "Poster Design"],
     },
     {
       title: "Miscellaneous Design Work",

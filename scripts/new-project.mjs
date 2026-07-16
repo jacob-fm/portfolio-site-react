@@ -40,11 +40,16 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === "--route") route = args[++i];
   else if (args[i] === "--media") media = args[++i];
   else if (title === null) title = args[i];
-  else fail(`unexpected argument "${args[i]}" (did you forget quotes around the title?)`);
+  else
+    fail(
+      `unexpected argument "${args[i]}" (did you forget quotes around the title?)`,
+    );
 }
 
 if (!title) {
-  fail('missing title. Usage: node scripts/new-project.mjs "My Project Title" [--name Name] [--route route]');
+  fail(
+    'missing title. Usage: node scripts/new-project.mjs "My Project Title" [--name Name] [--route route]',
+  );
 }
 
 const words = title
@@ -52,7 +57,8 @@ const words = title
   .replace(/[^a-zA-Z0-9]+/g, " ")
   .trim()
   .split(/\s+/);
-if (words.length === 0 || words[0] === "") fail("title has no usable characters");
+if (words.length === 0 || words[0] === "")
+  fail("title has no usable characters");
 
 if (!name) {
   name = words.map((w) => w[0].toUpperCase() + w.slice(1)).join("");
@@ -62,21 +68,26 @@ if (!route) route = kebab;
 route = route.replace(/^\//, "");
 if (!media) media = kebab;
 
-if (!/^[A-Za-z][A-Za-z0-9]*$/.test(name)) fail(`invalid component name "${name}"`);
-if (!/^[A-Za-z0-9._-]+$/.test(media)) fail(`invalid media folder name "${media}"`);
+if (!/^[A-Za-z][A-Za-z0-9]*$/.test(name))
+  fail(`invalid component name "${name}"`);
+if (!/^[A-Za-z0-9._-]+$/.test(media))
+  fail(`invalid media folder name "${media}"`);
 
 const componentPath = path.join(projectsDir, `${name}.jsx`);
 const mediaDir = path.join(root, "public", "media", media);
 const jsTitle = title.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
 // --- preflight checks ---
-if (fs.existsSync(componentPath)) fail(`${path.relative(root, componentPath)} already exists`);
+if (fs.existsSync(componentPath))
+  fail(`${path.relative(root, componentPath)} already exists`);
 
 let main = fs.readFileSync(mainPath, "utf8");
 let app = fs.readFileSync(appPath, "utf8");
 
-if (main.includes(`import ${name} `)) fail(`main.jsx already imports "${name}"`);
-if (main.includes(`path: "/${route}"`)) fail(`route "/${route}" already exists in main.jsx`);
+if (main.includes(`import ${name} `))
+  fail(`main.jsx already imports "${name}"`);
+if (main.includes(`path: "/${route}"`))
+  fail(`route "/${route}" already exists in main.jsx`);
 
 // --- 1. component file ---
 const component = `import ProjectPage from "../../components/ProjectPage";
@@ -94,7 +105,8 @@ fs.writeFileSync(componentPath, component);
 // --- 2. main.jsx: import + route ---
 // insert import after the last existing import line
 const importLines = [...main.matchAll(/^import .*;$/gm)];
-if (importLines.length === 0) fail("couldn't find any import lines in main.jsx");
+if (importLines.length === 0)
+  fail("couldn't find any import lines in main.jsx");
 const lastImport = importLines[importLines.length - 1];
 const importInsertAt = lastImport.index + lastImport[0].length;
 main =
@@ -104,7 +116,8 @@ main =
 
 // insert route before the closing "]);" of the router array
 const routerClose = main.indexOf("]);");
-if (routerClose === -1) fail('couldn\'t find "]);" closing the router array in main.jsx');
+if (routerClose === -1)
+  fail('couldn\'t find "]);" closing the router array in main.jsx');
 const routeEntry = `  {\n    path: "/${route}",\n    element: <${name} />,\n  },\n`;
 main = main.slice(0, routerClose) + routeEntry + main.slice(routerClose);
 
@@ -115,11 +128,12 @@ const thumbsMarker = "const thumbnails = [";
 const thumbsAt = app.indexOf(thumbsMarker);
 if (thumbsAt === -1) fail('couldn\'t find "const thumbnails = [" in App.jsx');
 const thumbsClose = app.indexOf("];", thumbsAt);
-if (thumbsClose === -1) fail('couldn\'t find "];" closing the thumbnails array in App.jsx');
+if (thumbsClose === -1)
+  fail('couldn\'t find "];" closing the thumbnails array in App.jsx');
 const thumbEntry = `  {
       title: "${jsTitle}",
       route: "/${route}",
-      image: "/media/${media}/thumbnail.png", // TODO: add a thumbnail image
+      image: "/media/${media}/thumbnail.png",
       badges: [], // TODO: add badges
     },
   `;
@@ -129,7 +143,9 @@ fs.writeFileSync(appPath, app);
 
 // --- 4. media folder ---
 if (fs.existsSync(mediaDir)) {
-  console.warn(`Note: ${path.relative(root, mediaDir)} already exists, skipping`);
+  console.warn(
+    `Note: ${path.relative(root, mediaDir)} already exists, skipping`,
+  );
 } else {
   fs.mkdirSync(mediaDir);
 }

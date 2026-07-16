@@ -39,7 +39,7 @@ export default function MiscDesign() {
         </p>
         <figure className="flex justify-center">
           <img
-            className="h-130"
+            className="max-h-130"
             src="/media/grit/grid_system.jpg"
             alt="Underlying grid structure of GRIT logo"
             loading="lazy"
@@ -79,7 +79,7 @@ export default function MiscDesign() {
           Fatface if you're curious).
         </p>
         <img
-          className="h-120 mx-auto"
+          className="max-h-130 mx-auto"
           src="/media/cupcakes_thumbnail.png"
           alt="Afternoon Cupcakes Logo"
           loading="lazy"

@@ -9,6 +9,7 @@
   --color-bg-dark: #ebe9e1;
   --color-primary: #b04b6c;
   --color-primary-dark: #993f5a;
+  --color-primary-light: #aa7585;
   --color-hover: #e24798;
 }
 
@@ -16,7 +17,7 @@
   body {
     @apply min-h-full w-full text-primary bg-bg p-4 font-sans;
   }
-  
+
   a {
     @apply text-blue-600 visited:text-blue-900;
   }
@@ -33,15 +34,33 @@
     @apply text-xl mt-5 text-center;
   }
 
-  .blog-content h1 { @apply text-2xl mt-6 mb-2; }
-  .blog-content h2 { @apply text-xl mt-5 mb-2; }
-  .blog-content h3 { @apply text-lg mt-4 mb-1; }
-  .blog-content p { @apply my-3 text-primary-dark; }
-  .blog-content ul { @apply list-disc ml-6 my-3; }
-  .blog-content ol { @apply list-decimal ml-6 my-3; }
-  .blog-content code { @apply bg-bg-dark px-1 rounded text-sm; }
-  .blog-content pre { @apply bg-bg-dark p-4 rounded-lg overflow-x-auto my-4; }
-  .blog-content img { @apply max-w-full rounded-lg my-4; }
+  .blog-content h1 {
+    @apply text-2xl mt-6 mb-2;
+  }
+  .blog-content h2 {
+    @apply text-xl mt-5 mb-2;
+  }
+  .blog-content h3 {
+    @apply text-lg mt-4 mb-1;
+  }
+  .blog-content p {
+    @apply my-3 text-primary-dark;
+  }
+  .blog-content ul {
+    @apply list-disc ml-6 my-3;
+  }
+  .blog-content ol {
+    @apply list-decimal ml-6 my-3;
+  }
+  .blog-content code {
+    @apply bg-bg-dark px-1 rounded text-sm;
+  }
+  .blog-content pre {
+    @apply bg-bg-dark p-4 rounded-lg overflow-x-auto my-4;
+  }
+  .blog-content img {
+    @apply max-w-full rounded-lg my-4;
+  }
 }
 
 /* Custom range slider for the synth panel — the track background is set inline

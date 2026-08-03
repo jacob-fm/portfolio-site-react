@@ -22,6 +22,12 @@ function App() {
       badges: ["Web Dev", "React", "TypeScript", "Shopify"],
     },
     {
+      title: "Third Strike Gallery",
+      route: "/third-strike-gallery",
+      image: "/media/third-strike-gallery/thumbnail.png",
+      badges: ["WIP", "Three.js", "Next.js", "React", "TypeScript"],
+    },
+    {
       title: "BopMatch",
       route: "/bopmatch",
       image: "/media/bopmatch/bopmatch_thumbnail.png",

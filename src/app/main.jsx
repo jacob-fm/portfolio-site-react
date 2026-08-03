@@ -17,6 +17,7 @@ import BlogPost from "../routes/BlogPost.jsx";
 import Strudel from "../routes/Strudel.jsx";
 import Umbral from "../routes/projects/Umbral.jsx";
 import NewMatrixGroup from "../routes/projects/NewMatrixGroup.jsx";
+import ThirdStrikeGallery from "../routes/projects/ThirdStrikeGallery.jsx";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
   {
     path: "/new-matrix-group",
     element: <NewMatrixGroup />,
+  },
+  {
+    path: "/third-strike-gallery",
+    element: <ThirdStrikeGallery />,
   },
 ]);
 

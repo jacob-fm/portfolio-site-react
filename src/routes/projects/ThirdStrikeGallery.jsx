@@ -35,7 +35,28 @@ export default function ThirdStrikeGallery() {
           Your browser does not support the video tag.
         </video>
       </div>
-      <h2>Process</h2>
+      <div className="flex flex-col md:flex-row w-full gap-2">
+        <img
+          src="/media/third-strike-gallery/close-up.png"
+          aria-label="A close-up screenshot of the character tiles"
+          className="min-w-0 flex-1"
+        />
+        <video
+          preload="auto"
+          loop
+          muted
+          autoPlay
+          className="min-w-0 flex-1 aspect-[1736/1274] object-cover object-center"
+        >
+          <source
+            src="/media/third-strike-gallery/akuma-shoryu.mp4"
+            type="video/mp4"
+            aria-label="Akuma's Gou Shoryuken performed in the browser"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <h2 className="mt-8">Process</h2>
       <p>
         I had a fun time putting together a moodboard using screnshots from the
         original Third Strike as well as other games. I had in mind that I

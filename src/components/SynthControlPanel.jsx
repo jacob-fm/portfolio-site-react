@@ -17,6 +17,7 @@ import {
   ROOT_NOTES,
   SCALES,
   OCTAVE_RANGE,
+  DEFAULT_SETTINGS,
   shiftOctave,
 } from "../lib/hoverSound";
 
@@ -50,6 +51,28 @@ const SLOPE_LABELS = {
   48: "48",
   96: "Wall",
 };
+
+// Which settings each accordion section owns — drives its reset button. The
+// filter section owns both tabs' settings, so resetting it restores the
+// inactive tab too.
+const SECTION_KEYS = {
+  tone: ["waveType", "root", "scale", "baseOctave"],
+  envelope: ["attack", "decay", "sustain", "release"],
+  filter: [
+    "filterType",
+    "lowpassFrequency",
+    "lowpassQ",
+    "lowpassSlope",
+    "highpassFrequency",
+    "highpassQ",
+    "highpassSlope",
+  ],
+};
+
+const sectionDefaults = (section) =>
+  Object.fromEntries(
+    SECTION_KEYS[section].map((key) => [key, DEFAULT_SETTINGS[key]]),
+  );
 
 const rand = (min, max) => min + Math.random() * (max - min);
 // Log-uniform pick, so a random frequency is as likely to land low as high.
@@ -208,9 +231,10 @@ function saveLayout(layout) {
   }
 }
 
-// A dice button that rolls new values for whatever it's attached to. Stops its
-// pointerdown so one placed in the panel header doesn't start a drag.
-function DiceButton({ onClick, tooltip }) {
+// A square icon button with a tooltip — the shared vocabulary for the panel
+// header and every section header. Stops its pointerdown so the ones sitting on
+// the panel's drag handle don't start a drag.
+function IconButton({ icon, tooltip, onClick, iconClassName = "" }) {
   return (
     <button
       type="button"
@@ -219,40 +243,53 @@ function DiceButton({ onClick, tooltip }) {
       onClick={onClick}
       className="relative cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
     >
-      <i className="fa-solid fa-dice" />
+      <i className={`fa-solid ${icon} ${iconClassName}`} />
       <TooltipBubble text={tooltip} />
     </button>
   );
 }
 
-// A collapsible section with a clickable header (accordion item), optionally
-// with its own dice button that randomizes just this section's controls.
+// A collapsible section (accordion item). Its header mirrors the panel's own:
+// title on the left, then randomize / reset / collapse buttons on the right,
+// where collapse is the section-level equivalent of minimize. `noun` names what
+// the section owns and fills in the button tooltips.
 function Collapsible({
   title,
+  noun,
   open,
   onToggle,
   onRandomize,
-  randomTooltip,
+  onReset,
   children,
 }) {
   return (
     <div className="pt-1 border-t border-primary/30">
-      <div className="flex items-center gap-1 py-0.5">
+      <div className="flex items-center gap-1">
         <button
           type="button"
           onClick={onToggle}
-          className="cursor-pointer flex flex-1 items-center justify-between gap-2 text-sm font-heading text-primary hover:text-hover"
+          className="cursor-pointer flex-1 text-left text-sm font-heading text-primary hover:text-hover"
         >
-          <span>{title}</span>
-          <i
-            className={`fa-solid fa-chevron-down text-[10px] transition-transform ${
-              open ? "" : "-rotate-90"
-            }`}
-          />
+          {title}
         </button>
-        {onRandomize && (
-          <DiceButton onClick={onRandomize} tooltip={randomTooltip} />
-        )}
+        <IconButton
+          icon="fa-dice"
+          tooltip={`Randomize ${noun}`}
+          onClick={onRandomize}
+        />
+        <IconButton
+          icon="fa-rotate-left"
+          tooltip={`Reset ${noun} to defaults`}
+          onClick={onReset}
+        />
+        <IconButton
+          icon="fa-chevron-down"
+          tooltip={open ? "Collapse" : "Expand"}
+          onClick={onToggle}
+          iconClassName={`text-[10px] transition-transform ${
+            open ? "" : "-rotate-90"
+          }`}
+        />
       </div>
       {open && <div className="flex flex-col gap-2 pt-1">{children}</div>}
     </div>
@@ -664,28 +701,21 @@ export default function SynthControlPanel() {
             >
               <span className="font-heading text-base">Hover Synth</span>
               <div className="flex items-center gap-2">
-                <DiceButton
-                  onClick={randomizeAll}
+                <IconButton
+                  icon="fa-dice"
                   tooltip="Randomize every setting except volume"
+                  onClick={randomizeAll}
                 />
-                <button
-                  type="button"
-                  onPointerDown={(e) => e.stopPropagation()}
+                <IconButton
+                  icon="fa-rotate-left"
+                  tooltip="Reset to defaults"
                   onClick={reset}
-                  className="relative cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
-                >
-                  <i className="fa-solid fa-rotate-left" />
-                  <TooltipBubble text="Reset to defaults" />
-                </button>
-                <button
-                  type="button"
-                  onPointerDown={(e) => e.stopPropagation()}
+                />
+                <IconButton
+                  icon="fa-minus"
+                  tooltip="Minimize"
                   onClick={() => setMinimized(true)}
-                  className="relative cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
-                >
-                  <i className="fa-solid fa-minus" />
-                  <TooltipBubble text="Minimize" />
-                </button>
+                />
               </div>
             </div>
 
@@ -712,10 +742,11 @@ export default function SynthControlPanel() {
               {/* Tone & Key: wave + root + scale + octave */}
               <Collapsible
                 title="Tone & Key"
+                noun="the wave, key, and octave"
                 open={layout.sections.tone}
                 onToggle={() => toggleSection("tone")}
                 onRandomize={() => update(randomTone())}
-                randomTooltip="Randomize the wave, key, and octave"
+                onReset={() => update(sectionDefaults("tone"))}
               >
                 {/* Wave type */}
                 <div className="relative flex flex-col gap-1">
@@ -776,10 +807,11 @@ export default function SynthControlPanel() {
               {/* Envelope (ADSR) */}
               <Collapsible
                 title="Envelope"
+                noun="the envelope"
                 open={layout.sections.envelope}
                 onToggle={() => toggleSection("envelope")}
                 onRandomize={() => update(randomEnvelope())}
-                randomTooltip="Randomize the envelope"
+                onReset={() => update(sectionDefaults("envelope"))}
               >
                 <Slider
                   label="Attack"
@@ -826,10 +858,11 @@ export default function SynthControlPanel() {
               {/* Filter */}
               <Collapsible
                 title="Filter"
+                noun="the filter"
                 open={layout.sections.filter}
                 onToggle={() => toggleSection("filter")}
                 onRandomize={() => update(randomFilter())}
-                randomTooltip="Randomize the filter"
+                onReset={() => update(sectionDefaults("filter"))}
               >
                 {/* Filter type tabs */}
                 <div className="flex">

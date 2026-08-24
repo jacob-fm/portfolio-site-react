@@ -54,7 +54,9 @@ export const SCALES = {
   dorian: [0, 2, 3, 5, 7, 9, 10],
 };
 
-const DEFAULT_SETTINGS = {
+// Exported (and frozen) so the panel can reset one section's settings without
+// duplicating their default values.
+export const DEFAULT_SETTINGS = Object.freeze({
   enabled: false,
   waveType: "triangle",
   volume: 0.3,
@@ -73,7 +75,7 @@ const DEFAULT_SETTINGS = {
   highpassFrequency: 20, // Hz — neutral (passes everything above)
   highpassQ: 1,
   highpassSlope: 12, // dB/octave
-};
+});
 
 // Small hold so the sustain stage is audible for a one-shot (no key-hold) note.
 const SUSTAIN_HOLD = 0.06;
@@ -219,7 +221,10 @@ function semitonesForIndex(index) {
   // Semitones from A4: root position, scale step, octave climb, and how far
   // the chosen base octave sits from octave 4.
   return (
-    rootOffset + intervals[degree] + 12 * octave + 12 * (settings.baseOctave - 4)
+    rootOffset +
+    intervals[degree] +
+    12 * octave +
+    12 * (settings.baseOctave - 4)
   );
 }
 

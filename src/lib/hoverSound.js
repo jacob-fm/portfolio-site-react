@@ -38,6 +38,13 @@ export const ROOT_NOTES = {
   B: 2,
 };
 
+// Playable range for the base octave. The homepage's 13 hover targets already
+// climb 2-3 octaves above the base on their own, so going much past 6 turns the
+// last thumbnails shrill. The bottom end is deliberately low: octave 1 is under
+// most laptop speakers, but the upper cards still land in range, so it reads as
+// a sub-bass setting rather than a broken one.
+export const OCTAVE_RANGE = { min: 1, max: 6 };
+
 // Scale definitions as semitone intervals from the root.
 export const SCALES = {
   major: [0, 2, 4, 5, 7, 9, 11],
@@ -133,6 +140,17 @@ export function resetSynthSettings() {
   return setSynthSettings({ ...DEFAULT_SETTINGS, enabled: settings.enabled });
 }
 
+// Move the base octave by `delta`, clamped to OCTAVE_RANGE. Returns the octave
+// actually landed on, so callers don't have to re-read the settings.
+export function shiftOctave(delta) {
+  const next = Math.min(
+    OCTAVE_RANGE.max,
+    Math.max(OCTAVE_RANGE.min, settings.baseOctave + delta),
+  );
+  if (next !== settings.baseOctave) setSynthSettings({ baseOctave: next });
+  return next;
+}
+
 let audioCtx = null;
 
 function getAudioContext() {
@@ -160,6 +178,34 @@ function installAudioUnlock() {
   window.addEventListener("touchstart", unlock);
 }
 installAudioUnlock();
+
+// z/x shift the octave down/up. Bound globally rather than on the panel so they
+// work while the cursor is out over the thumbnails playing notes — which is the
+// whole point of having a shortcut. (Arrow keys are deliberately not bound:
+// they'd fight page scrolling and the panel's own <select> navigation.)
+const OCTAVE_KEYS = { z: -1, x: 1 };
+
+function installOctaveShortcuts() {
+  if (typeof window === "undefined") return;
+  window.addEventListener("keydown", (e) => {
+    if (!settings.enabled) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    // Don't hijack the key while the user is typing or working a form control.
+    const el = e.target;
+    if (
+      el &&
+      (el.isContentEditable ||
+        ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName))
+    ) {
+      return;
+    }
+    const delta = OCTAVE_KEYS[e.key.toLowerCase()];
+    if (delta === undefined) return;
+    e.preventDefault();
+    shiftOctave(delta);
+  });
+}
+installOctaveShortcuts();
 
 // Semitones above/below A4 for a thumbnail index given the current key settings.
 function semitonesForIndex(index) {

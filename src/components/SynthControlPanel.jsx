@@ -16,6 +16,8 @@ import {
   FILTER_SLOPES,
   ROOT_NOTES,
   SCALES,
+  OCTAVE_RANGE,
+  shiftOctave,
 } from "../lib/hoverSound";
 
 const LAYOUT_KEY = "hoverSynthLayout";
@@ -335,6 +337,42 @@ function Slider({
   );
 }
 
+// A compact −/+ stepper for the base octave, sized to sit beside the Root and
+// Scale selects. Its tooltip is also where the z/x shortcut gets advertised —
+// the shortcut is otherwise invisible.
+function OctaveStepper({ value }) {
+  const button =
+    "cursor-pointer flex-1 py-1 rounded border border-primary text-primary hover:text-hover hover:border-hover disabled:cursor-default disabled:opacity-30 disabled:hover:text-primary disabled:hover:border-primary";
+
+  return (
+    <div className="relative flex flex-col gap-0.5 text-xs w-[78px]">
+      <TooltipBubble text="Shift every note up or down an octave — or press z / x while you play" />
+      <span>Octave</span>
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          aria-label="Octave down"
+          disabled={value <= OCTAVE_RANGE.min}
+          onClick={() => shiftOctave(-1)}
+          className={button}
+        >
+          −
+        </button>
+        <span className="w-3 text-center tabular-nums">{value}</span>
+        <button
+          type="button"
+          aria-label="Octave up"
+          disabled={value >= OCTAVE_RANGE.max}
+          onClick={() => shiftOctave(1)}
+          className={button}
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function SynthControlPanel() {
   const [settings, update, reset] = useSynthSettings();
   const [layout, setLayout] = useState(loadLayout);
@@ -612,9 +650,9 @@ export default function SynthControlPanel() {
                 </div>
               </div>
 
-              {/* Key: root + scale */}
+              {/* Key: root + scale + octave */}
               <div className="flex gap-2">
-                <label className="relative flex flex-col gap-0.5 text-xs flex-1">
+                <label className="relative flex flex-col gap-0.5 text-xs w-14">
                   <span>Root</span>
                   <select
                     value={settings.root}
@@ -642,6 +680,7 @@ export default function SynthControlPanel() {
                     ))}
                   </select>
                 </label>
+                <OctaveStepper value={settings.baseOctave} />
               </div>
 
               {/* Envelope (ADSR) */}

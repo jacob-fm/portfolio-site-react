@@ -87,12 +87,30 @@ function loadSettings() {
 
 let settings = loadSettings();
 
+// Components outside the panel (the thumbnails' note overlays) need to react to
+// settings changes, so the module doubles as a tiny store: `settings` is always
+// replaced rather than mutated, making it a stable snapshot between updates.
+const listeners = new Set();
+
+export function subscribeSynthSettings(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+// The live settings object itself. Stable identity until the next change, which
+// is what useSyncExternalStore requires of a snapshot — unlike
+// getSynthSettings(), which hands out a fresh copy every call.
+export function getSynthSettingsSnapshot() {
+  return settings;
+}
+
 export function getSynthSettings() {
   return { ...settings };
 }
 
 export function setSynthSettings(partial) {
   settings = { ...settings, ...partial };
+  listeners.forEach((listener) => listener());
   if (typeof localStorage !== "undefined") {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
@@ -143,8 +161,8 @@ function installAudioUnlock() {
 }
 installAudioUnlock();
 
-// Frequency (Hz) for a thumbnail index given the current key settings.
-function frequencyForIndex(index) {
+// Semitones above/below A4 for a thumbnail index given the current key settings.
+function semitonesForIndex(index) {
   const intervals = SCALES[settings.scale] || SCALES.major;
   const rootOffset = ROOT_NOTES[settings.root] ?? ROOT_NOTES.E;
 
@@ -154,13 +172,42 @@ function frequencyForIndex(index) {
 
   // Semitones from A4: root position, scale step, octave climb, and how far
   // the chosen base octave sits from octave 4.
-  const semitonesFromA4 =
-    rootOffset +
-    intervals[degree] +
-    12 * octave +
-    12 * (settings.baseOctave - 4);
+  return (
+    rootOffset + intervals[degree] + 12 * octave + 12 * (settings.baseOctave - 4)
+  );
+}
 
-  return 440 * Math.pow(2, semitonesFromA4 / 12);
+// Frequency (Hz) for a thumbnail index given the current key settings.
+function frequencyForIndex(index) {
+  return 440 * Math.pow(2, semitonesForIndex(index) / 12);
+}
+
+// Chromatic note names, indexed by pitch class (0 = C). Spelled with sharps to
+// match the ROOT_NOTES keys the panel offers.
+const NOTE_NAMES = [
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B",
+];
+
+// Scientific pitch name (e.g. "C4", "F#5") for a thumbnail index — what the
+// note overlay prints on each card. Mirrors frequencyForIndex exactly, so the
+// label always matches what you'd hear.
+export function noteNameForIndex(index = 0) {
+  // A4 is MIDI 69; MIDI 12 is C0, so the octave number is floor(midi / 12) - 1.
+  const midi = 69 + semitonesForIndex(index);
+  const pitchClass = ((midi % 12) + 12) % 12;
+  const octave = Math.floor(midi / 12) - 1;
+  return `${NOTE_NAMES[pitchClass]}${octave}`;
 }
 
 // Plays a short synth note for the given thumbnail index using current settings.

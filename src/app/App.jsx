@@ -3,6 +3,7 @@ import ThumbnailCard from "../components/ThumbnailCard";
 import { getAllPosts } from "../lib/blog";
 import { playHoverNote } from "../lib/hoverSound";
 import SynthControlPanel from "../components/SynthControlPanel";
+import NoteOverlay from "../components/NoteOverlay";
 import "./style.css";
 
 function App() {
@@ -137,11 +138,12 @@ function App() {
             onMouseEnter={() => playHoverNote(0)}
             className="group border border-solid border-primary hover:border-hover shadow-lg transform transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-xl flex flex-col lg:flex-row"
           >
-            <div className="lg:w-2/3 h-64 lg:h-120">
+            <div className="relative lg:w-2/3 h-64 lg:h-120">
               <img
                 src={featured.image}
                 className="object-cover h-full w-full"
               />
+              <NoteOverlay index={0} />
             </div>
             <div className="lg:w-1/3 flex flex-col items-center justify-center bg-bg text-primary group-hover:text-hover transition-colors duration-200 p-6">
               <h2 className="text-2xl font-heading mb-3">{featured.title}</h2>

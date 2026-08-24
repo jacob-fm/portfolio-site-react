@@ -1,22 +1,28 @@
-import { useState, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import {
-  getSynthSettings,
+  getSynthSettingsSnapshot,
   setSynthSettings,
   resetSynthSettings,
+  subscribeSynthSettings,
 } from "../lib/hoverSound";
 
-// Bridges the SynthControlPanel UI to the hoverSound engine. The engine's
-// module-level settings remain the source of truth for playHoverNote(); this
-// hook mirrors them into React state so the panel re-renders on change.
+// Bridges the hoverSound engine to React. The engine's module-level settings
+// remain the source of truth for playHoverNote(); this hook subscribes to them
+// so every consumer — the panel and each thumbnail's note overlay — re-renders
+// together when any of them changes a setting.
 export default function useSynthSettings() {
-  const [settings, setSettings] = useState(getSynthSettings);
+  const settings = useSyncExternalStore(
+    subscribeSynthSettings,
+    getSynthSettingsSnapshot,
+    getSynthSettingsSnapshot,
+  );
 
   const update = useCallback((partial) => {
-    setSettings(setSynthSettings(partial));
+    setSynthSettings(partial);
   }, []);
 
   const reset = useCallback(() => {
-    setSettings(resetSynthSettings());
+    resetSynthSettings();
   }, []);
 
   return [settings, update, reset];

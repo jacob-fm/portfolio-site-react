@@ -51,6 +51,48 @@ const SLOPE_LABELS = {
   96: "Wall",
 };
 
+const rand = (min, max) => min + Math.random() * (max - min);
+// Log-uniform pick, so a random frequency is as likely to land low as high.
+const randLog = (min, max) => Math.exp(rand(Math.log(min), Math.log(max)));
+const pick = (list) => list[Math.floor(Math.random() * list.length)];
+const snap = (value, step) => Math.round(value / step) * step;
+
+// Each randomizer stays inside a musically useful slice of its controls' full
+// ranges — the extremes (octave 1, a 20Hz low-pass) are valid settings but
+// mostly produce mush or near-silence, which makes a dice roll feel broken.
+function randomTone() {
+  return {
+    waveType: pick(WAVE_TYPES),
+    root: pick(Object.keys(ROOT_NOTES)),
+    scale: pick(Object.keys(SCALES)),
+    baseOctave: pick([3, 4, 5]),
+  };
+}
+
+function randomEnvelope() {
+  return {
+    attack: snap(rand(0, 0.15), 0.005),
+    decay: snap(rand(0.05, 0.6), 0.005),
+    sustain: snap(rand(0, 0.6), 0.01),
+    release: snap(rand(0.03, 0.5), 0.005),
+  };
+}
+
+// Only the picked filter type's own cutoff/Q/slope are rolled — the other tab
+// keeps its settings, so switching back lands on what the user left there.
+function randomFilter() {
+  const filterType = pick(FILTER_TYPES);
+  const isHighpass = filterType === "highpass";
+  return {
+    filterType,
+    [isHighpass ? "highpassFrequency" : "lowpassFrequency"]: isHighpass
+      ? randLog(20, 1500)
+      : randLog(300, 20000),
+    [isHighpass ? "highpassQ" : "lowpassQ"]: snap(rand(0.1, 8), 0.1),
+    [isHighpass ? "highpassSlope" : "lowpassSlope"]: pick(FILTER_SLOPES),
+  };
+}
+
 // Track the cursor globally so a callout can appear at the last-known position
 // even before the first mousemove after it's shown.
 let lastCursor = { x: 0, y: 0 };
@@ -129,7 +171,7 @@ function loadLayout() {
         : 24,
     minimized: true,
     // Which accordion sections are expanded — all open by default.
-    sections: { envelope: true, filter: true },
+    sections: { tone: true, envelope: true, filter: true },
   };
   if (typeof localStorage === "undefined") return fallback;
   try {
@@ -166,22 +208,52 @@ function saveLayout(layout) {
   }
 }
 
-// A collapsible section with a clickable header (accordion item).
-function Collapsible({ title, open, onToggle, children }) {
+// A dice button that rolls new values for whatever it's attached to. Stops its
+// pointerdown so one placed in the panel header doesn't start a drag.
+function DiceButton({ onClick, tooltip }) {
+  return (
+    <button
+      type="button"
+      aria-label={tooltip}
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={onClick}
+      className="relative cursor-pointer w-6 h-6 flex items-center justify-center rounded text-primary hover:text-hover"
+    >
+      <i className="fa-solid fa-dice" />
+      <TooltipBubble text={tooltip} />
+    </button>
+  );
+}
+
+// A collapsible section with a clickable header (accordion item), optionally
+// with its own dice button that randomizes just this section's controls.
+function Collapsible({
+  title,
+  open,
+  onToggle,
+  onRandomize,
+  randomTooltip,
+  children,
+}) {
   return (
     <div className="pt-1 border-t border-primary/30">
-      <button
-        type="button"
-        onClick={onToggle}
-        className="cursor-pointer w-full flex items-center justify-between text-sm font-heading text-primary py-0.5 hover:text-hover"
-      >
-        <span>{title}</span>
-        <i
-          className={`fa-solid fa-chevron-down text-[10px] transition-transform ${
-            open ? "" : "-rotate-90"
-          }`}
-        />
-      </button>
+      <div className="flex items-center gap-1 py-0.5">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="cursor-pointer flex flex-1 items-center justify-between gap-2 text-sm font-heading text-primary hover:text-hover"
+        >
+          <span>{title}</span>
+          <i
+            className={`fa-solid fa-chevron-down text-[10px] transition-transform ${
+              open ? "" : "-rotate-90"
+            }`}
+          />
+        </button>
+        {onRandomize && (
+          <DiceButton onClick={onRandomize} tooltip={randomTooltip} />
+        )}
+      </div>
       {open && <div className="flex flex-col gap-2 pt-1">{children}</div>}
     </div>
   );
@@ -466,6 +538,11 @@ export default function SynthControlPanel() {
     }
   };
 
+  // Roll every section at once. Volume is left alone deliberately — a surprise
+  // jump in loudness is the one random change that isn't fun.
+  const randomizeAll = () =>
+    update({ ...randomTone(), ...randomEnvelope(), ...randomFilter() });
+
   const toggleSection = (key) =>
     setLayout((l) => {
       const next = {
@@ -587,6 +664,10 @@ export default function SynthControlPanel() {
             >
               <span className="font-heading text-base">Hover Synth</span>
               <div className="flex items-center gap-2">
+                <DiceButton
+                  onClick={randomizeAll}
+                  tooltip="Randomize every setting except volume"
+                />
                 <button
                   type="button"
                   onPointerDown={(e) => e.stopPropagation()}
@@ -628,66 +709,77 @@ export default function SynthControlPanel() {
                 format={(v) => `${Math.round((v / MAX_VOLUME) * 100)}%`}
               />
 
-              {/* Wave type */}
-              <div className="relative flex flex-col gap-1">
-                <TooltipBubble text="The basic character of the tone" />
-                <span className="text-xs">Wave</span>
-                <div className="grid grid-cols-4 gap-1">
-                  {WAVE_TYPES.map((w) => (
-                    <button
-                      key={w}
-                      type="button"
-                      onClick={() => update({ waveType: w })}
-                      className={`cursor-pointer text-xs py-1 rounded border capitalize ${
-                        settings.waveType === w
-                          ? "bg-primary text-bg border-primary"
-                          : "border-primary text-primary hover:text-hover hover:border-hover"
-                      }`}
-                    >
-                      {w}
-                    </button>
-                  ))}
+              {/* Tone & Key: wave + root + scale + octave */}
+              <Collapsible
+                title="Tone & Key"
+                open={layout.sections.tone}
+                onToggle={() => toggleSection("tone")}
+                onRandomize={() => update(randomTone())}
+                randomTooltip="Randomize the wave, key, and octave"
+              >
+                {/* Wave type */}
+                <div className="relative flex flex-col gap-1">
+                  <TooltipBubble text="The basic character of the tone" />
+                  <span className="text-xs">Wave</span>
+                  <div className="grid grid-cols-4 gap-1">
+                    {WAVE_TYPES.map((w) => (
+                      <button
+                        key={w}
+                        type="button"
+                        onClick={() => update({ waveType: w })}
+                        className={`cursor-pointer text-xs py-1 rounded border capitalize ${
+                          settings.waveType === w
+                            ? "bg-primary text-bg border-primary"
+                            : "border-primary text-primary hover:text-hover hover:border-hover"
+                        }`}
+                      >
+                        {w}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Key: root + scale + octave */}
-              <div className="flex gap-2">
-                <label className="relative flex flex-col gap-0.5 text-xs w-14">
-                  <span>Root</span>
-                  <select
-                    value={settings.root}
-                    onChange={(e) => update({ root: e.target.value })}
-                    className="cursor-pointer border border-primary rounded px-1 py-1 bg-bg text-primary"
-                  >
-                    {Object.keys(ROOT_NOTES).map((r) => (
-                      <option key={r} value={r}>
-                        {r}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="relative flex flex-col gap-0.5 text-xs flex-1">
-                  <span>Scale</span>
-                  <select
-                    value={settings.scale}
-                    onChange={(e) => update({ scale: e.target.value })}
-                    className="cursor-pointer border border-primary rounded px-1 py-1 bg-bg text-primary"
-                  >
-                    {Object.keys(SCALES).map((s) => (
-                      <option key={s} value={s}>
-                        {SCALE_LABELS[s] || s}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <OctaveStepper value={settings.baseOctave} />
-              </div>
+                {/* Key: root + scale + octave */}
+                <div className="flex gap-2">
+                  <label className="relative flex flex-col gap-0.5 text-xs w-14">
+                    <span>Root</span>
+                    <select
+                      value={settings.root}
+                      onChange={(e) => update({ root: e.target.value })}
+                      className="cursor-pointer border border-primary rounded px-1 py-1 bg-bg text-primary"
+                    >
+                      {Object.keys(ROOT_NOTES).map((r) => (
+                        <option key={r} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="relative flex flex-col gap-0.5 text-xs flex-1">
+                    <span>Scale</span>
+                    <select
+                      value={settings.scale}
+                      onChange={(e) => update({ scale: e.target.value })}
+                      className="cursor-pointer border border-primary rounded px-1 py-1 bg-bg text-primary"
+                    >
+                      {Object.keys(SCALES).map((s) => (
+                        <option key={s} value={s}>
+                          {SCALE_LABELS[s] || s}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <OctaveStepper value={settings.baseOctave} />
+                </div>
+              </Collapsible>
 
               {/* Envelope (ADSR) */}
               <Collapsible
                 title="Envelope"
                 open={layout.sections.envelope}
                 onToggle={() => toggleSection("envelope")}
+                onRandomize={() => update(randomEnvelope())}
+                randomTooltip="Randomize the envelope"
               >
                 <Slider
                   label="Attack"
@@ -736,6 +828,8 @@ export default function SynthControlPanel() {
                 title="Filter"
                 open={layout.sections.filter}
                 onToggle={() => toggleSection("filter")}
+                onRandomize={() => update(randomFilter())}
+                randomTooltip="Randomize the filter"
               >
                 {/* Filter type tabs */}
                 <div className="flex">

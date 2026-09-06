@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/blog/*"
+  to = "https://jacob-itp-blog.netlify.app/:splat"
+  status = 200
+

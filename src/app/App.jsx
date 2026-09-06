@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 import ThumbnailCard from "../components/ThumbnailCard";
-import { getAllPosts } from "../lib/blog";
 import { playHoverNote } from "../lib/hoverSound";
 import SynthControlPanel from "../components/SynthControlPanel";
 import NoteOverlay from "../components/NoteOverlay";
 import "./style.css";
 
 function App() {
-  const hasBlogPosts = getAllPosts().length > 0;
-
   const thumbnails = [
     {
       title: "Point Cloud Parties",
@@ -88,18 +85,17 @@ function App() {
 
   return (
     <div className="relative md:px-50 md:mb-8">
-      {/* Desktop: top-right corner */}
-      {hasBlogPosts && (
-        <div className="hidden md:block fixed top-14 right-24 z-20">
-          <Link
-            to="/blog"
-            className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
-          >
-            <i className="fa-solid fa-pen-nib"></i>
-            <span>Blog</span>
-          </Link>
-        </div>
-      )}
+      {/* Desktop: top-right corner. Plain anchor, not <Link> — /blog/ is proxied
+          to the ITP blog by netlify.toml and must hit the server, not the router. */}
+      <div className="hidden md:block fixed top-14 right-24 z-20">
+        <a
+          href="/blog/"
+          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
+        >
+          <i className="fa-solid fa-pen-nib"></i>
+          <span>Blog</span>
+        </a>
+      </div>
       <div id="title-block" className="w-full text-center my-8">
         <h1 className="text-5xl mb-1 font-heading">Jacob Feit Mann</h1>
         <h2 className="text-2xl text-stone-600 font-light">
@@ -118,17 +114,15 @@ function App() {
         </a>
       </div>
       {/* Mobile: below contact icons */}
-      {hasBlogPosts && (
-        <div className="flex justify-center mb-8 md:hidden">
-          <Link
-            to="/blog"
-            className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
-          >
-            <i className="fa-solid fa-pen-nib"></i>
-            <span>Blog</span>
-          </Link>
-        </div>
-      )}
+      <div className="flex justify-center mb-8 md:hidden">
+        <a
+          href="/blog/"
+          className="flex items-center gap-1.5 py-2 px-4 text-lg text-primary border border-primary rounded-lg hover:text-hover hover:border-hover active:text-blue-700 active:border-blue-700"
+        >
+          <i className="fa-solid fa-pen-nib"></i>
+          <span>Blog</span>
+        </a>
+      </div>
       <div className=" mx-auto w-full pt-4 lg:p-6 md:mt-14 mb-10 bg-bg-dark flex flex-col gap-4 ">
         <h3 className="text-3xl font-heading text-center text-stone-600 top-0 left-0 right-0 ">
           Recent Work

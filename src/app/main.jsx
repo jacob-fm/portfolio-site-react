@@ -12,8 +12,6 @@ import GamingTokens from "../routes/projects/GamingTokens.jsx";
 import MiscDesign from "../routes/projects/MiscDesign.jsx";
 import NotFoundPage from "../routes/NotFoundPage.jsx";
 import Nigunim from "../routes/projects/Nigunim.jsx";
-import Blog from "../routes/Blog.jsx";
-import BlogPost from "../routes/BlogPost.jsx";
 import Strudel from "../routes/Strudel.jsx";
 import Umbral from "../routes/projects/Umbral.jsx";
 import NewMatrixGroup from "../routes/projects/NewMatrixGroup.jsx";
@@ -65,14 +63,6 @@ const router = createBrowserRouter([
   {
     path: "/misc-design",
     element: <MiscDesign />,
-  },
-  {
-    path: "/blog",
-    element: <Blog />,
-  },
-  {
-    path: "/blog/:slug",
-    element: <BlogPost />,
   },
   {
     path: "/strudel",

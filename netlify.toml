@@ -1,5 +1,20 @@
+# Redirect rules live here and ONLY here. Netlify processes a _redirects file
+# before this one, so a stray public/_redirects would shadow everything below
+# (that is exactly what silently broke the first attempt at the /blog proxy).
+# First matching rule wins, top to bottom — order is significant.
+
+# Proxy the ITP blog behind this domain. Note the redirect engine normalizes
+# "/blog" and "/blog/" to the same path, so this rule catches both; forcing the
+# trailing slash is handled by netlify/edge-functions/blog-trailing-slash.js,
+# which is the only layer that can tell them apart.
 [[redirects]]
   from = "/blog/*"
   to = "https://jacob-itp-blog.netlify.app/:splat"
   status = 200
+  force = true
 
+# SPA fallback — must stay last, it matches everything.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
